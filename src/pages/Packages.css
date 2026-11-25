@@ -1,0 +1,274 @@
+.pkg-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  align-items: end;
+}
+
+.pkg {
+  height: 540px;
+}
+
+.pkg.top {
+  height: 580px;
+}
+
+.pkg .front {
+  align-items: stretch;
+  padding: 0;
+  transition: box-shadow 0.35s;
+}
+
+.pkg:hover .front {
+  box-shadow: var(--neu), 0 25px 50px -12px color-mix(in srgb, var(--c) 50%, transparent);
+}
+
+.pkg:hover .flip-in {
+  translate: 0 -6px;
+}
+
+.pk-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px 26px 0 0;
+  padding: 24px 22px 22px;
+  color: #fff;
+  background: radial-gradient(circle at 85% 10%, rgba(255, 255, 255, 0.35), transparent 42%),
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--c) 80%, #fff),
+      var(--c) 45%,
+      color-mix(in srgb, var(--c) 50%, #021a1a)
+    );
+}
+
+.pk-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.28) 1.2px, transparent 1.4px);
+  background-size: 16px 16px;
+  mask-image: linear-gradient(120deg, #000 10%, transparent 70%);
+  -webkit-mask-image: linear-gradient(120deg, #000 10%, transparent 70%);
+}
+
+.pk-hero > * {
+  position: relative;
+}
+
+.pk-hero .sc-ring {
+  position: absolute;
+}
+
+.pk-em {
+  position: absolute !important;
+  right: 18px;
+  bottom: 18px;
+  width: 54px;
+  height: 54px;
+  opacity: 0.95;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.25));
+}
+
+.pk-em svg {
+  width: 100%;
+  height: 100%;
+}
+
+.tier {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 30px;
+}
+
+.pk-hero .tier {
+  display: inline-block;
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.pkg h3 {
+  font-size: 2rem;
+  margin: 16px 0 2px;
+  color: #fff;
+}
+
+.pkg .motto {
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.price {
+  font-family: 'Sora';
+  font-weight: 800;
+  font-size: 2rem;
+  margin: 14px 0 0;
+  color: #fff;
+}
+
+.price small {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+}
+
+.pk-body {
+  padding: 18px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.pk-worth {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--c) 14%, #fff);
+  color: color-mix(in srgb, var(--c) 65%, #021a1a);
+}
+
+.pkg .vision {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin-top: 12px;
+}
+
+.meter {
+  display: flex;
+  gap: 5px;
+  margin-top: 18px;
+}
+
+.meter i {
+  width: 26px;
+  height: 8px;
+  border-radius: 5px;
+  box-shadow: var(--neu-in);
+}
+
+.meter i.f {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--c) 70%, #fff), var(--c));
+  box-shadow: none;
+}
+
+.crown {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.crown svg {
+  width: 13px;
+  height: 13px;
+  vertical-align: -2px;
+  margin-right: 4px;
+}
+
+.pkg .pk-hero .crown {
+  position: relative;
+  display: block;
+  top: auto;
+  right: auto;
+  text-align: center;
+  margin: -24px -22px 16px;
+  border-radius: 0;
+  padding: 7px;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+}
+
+.pkg.top .pk-hero {
+  background: radial-gradient(circle at 85% 10%, rgba(245, 196, 81, 0.45), transparent 45%),
+    linear-gradient(150deg, #0a2b2a, #05403d 50%, #021a1a);
+}
+
+.pkg.top .pk-hero h3,
+.pkg.top .pk-hero .price {
+  background: linear-gradient(120deg, #fde68a, #f5c451, #d4a017);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.pkg.top .pk-hero .motto {
+  color: #fde68a;
+}
+
+.pkg.top .pk-hero .tier {
+  box-shadow: inset 0 0 0 1px rgba(245, 196, 81, 0.7);
+  color: #fde68a;
+}
+
+.pkg.top .front {
+  box-shadow: var(--neu), 0 0 0 2px rgba(212, 160, 23, 0.55);
+}
+
+.pkg.top .crown {
+  background: linear-gradient(120deg, #fde68a, #f5c451);
+  color: #3a2a00;
+}
+
+.pkg .back {
+  padding: 0;
+  overflow: hidden;
+  background: linear-gradient(170deg, color-mix(in srgb, var(--c) 10%, rgba(255, 255, 255, 0.88)), rgba(255, 255, 255, 0.6));
+}
+
+.pkg .back ul {
+  padding: 16px 22px 0;
+  overflow: auto;
+}
+
+.pkg .back li span {
+  display: block;
+}
+
+.pkg .back li::before {
+  background: var(--c);
+}
+
+.pkg .back .btn {
+  margin: auto 22px 20px;
+}
+
+.pk-btn {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c) 75%, #fff),
+    var(--c),
+    color-mix(in srgb, var(--c) 55%, #021a1a)
+  );
+  box-shadow: 0 10px 25px color-mix(in srgb, var(--c) 40%, transparent);
+}
+
+.pkg.top .sc-bhead {
+  background: linear-gradient(140deg, #0a2b2a, #05403d);
+}
+
+.pkg.top .sc-bhead b {
+  color: #fde68a;
+}
+
+@media (max-width: 1150px) {
+  .pkg-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pkg,
+  .pkg.top {
+    height: 560px;
+  }
+}
+
+@media (max-width: 600px) {
+  .pkg-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

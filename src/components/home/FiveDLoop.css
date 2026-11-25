@@ -1,0 +1,55 @@
+.loop-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.loop-svg {
+  width: 100%;
+  max-width: 520px;
+  margin: auto;
+  display: block;
+}
+
+.steps {
+  display: grid;
+  gap: 14px;
+}
+
+.step {
+  display: flex;
+  gap: 16px;
+  padding: 18px 20px;
+  align-items: flex-start;
+}
+
+.step .num {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-family: 'Sora';
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, var(--tq2), var(--deep));
+}
+
+.step h4 {
+  font-size: 1.02rem;
+  margin-bottom: 3px;
+}
+
+.step p {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+@media (max-width: 960px) {
+  .loop-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

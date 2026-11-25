@@ -1,0 +1,58 @@
+.site-footer {
+  margin-top: 40px;
+  padding: 50px 0 30px;
+}
+
+.foot {
+  padding: 40px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 30px;
+}
+
+.foot-blurb {
+  font-size: 0.87rem;
+  color: var(--muted);
+  max-width: 320px;
+}
+
+.foot h5 {
+  font-family: 'Sora';
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+
+.foot a,
+.foot-link-btn {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  padding: 3px 0;
+  text-align: left;
+}
+
+.foot a:hover,
+.foot-link-btn:hover {
+  color: var(--deep);
+}
+
+.copy {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 24px;
+}
+
+@media (max-width: 960px) {
+  .foot {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .foot {
+    grid-template-columns: 1fr;
+    padding: 28px;
+  }
+}
+

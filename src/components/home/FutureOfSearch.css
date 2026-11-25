@@ -1,0 +1,41 @@
+.evo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.evo-card {
+  padding: 30px 26px;
+}
+
+.evo-card .tag {
+  font-family: 'Sora';
+  font-weight: 800;
+  font-size: 2.4rem;
+}
+
+.evo-card h4 {
+  margin: 6px 0 8px;
+}
+
+.evo-card p {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.evo-card.hot {
+  background: linear-gradient(150deg, rgba(15, 181, 173, 0.92), rgba(8, 81, 77, 0.95));
+  color: #fff;
+  border: none;
+}
+
+.evo-card.hot p {
+  color: #d8fffb;
+}
+
+@media (max-width: 960px) {
+  .evo {
+    grid-template-columns: 1fr;
+  }
+}
+

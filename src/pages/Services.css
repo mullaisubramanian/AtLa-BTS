@@ -1,0 +1,290 @@
+.svc-tools {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 34px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px 6px 18px;
+  border-radius: 50px;
+  background: var(--bg);
+  box-shadow: var(--neu-in);
+  width: min(560px, 100%);
+}
+
+.search input {
+  flex: 1;
+  border: none;
+  background: none;
+  outline: none;
+  font: inherit;
+  font-size: 0.95rem;
+  padding: 10px 0;
+  color: var(--ink);
+}
+
+.search svg {
+  width: 20px;
+  flex: none;
+}
+
+.results {
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 30px;
+}
+
+.results.show {
+  display: grid;
+}
+
+.res {
+  padding: 16px 18px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+.res small {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c);
+}
+
+.res b {
+  display: block;
+  margin: 3px 0;
+  font-size: 0.92rem;
+}
+
+.res p {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.flip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
+  gap: 26px;
+}
+
+.svc-card {
+  height: 470px;
+}
+
+.svc-card .front {
+  padding: 0;
+  background: var(--bg);
+  box-shadow: var(--neu);
+  transition: box-shadow 0.35s;
+}
+
+.svc-card:hover .front {
+  box-shadow: var(--neu), 0 25px 50px -12px color-mix(in srgb, var(--c) 45%, transparent);
+}
+
+.svc-card:hover .flip-in {
+  translate: 0 -6px;
+}
+
+.sc-hero {
+  position: relative;
+  height: 200px;
+  flex: none;
+  overflow: hidden;
+  border-radius: 26px 26px 0 0;
+  background: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.35), transparent 40%),
+    linear-gradient(
+      140deg,
+      color-mix(in srgb, var(--c) 85%, #fff),
+      var(--c) 45%,
+      color-mix(in srgb, var(--c) 55%, #021a1a)
+    );
+}
+
+.sc-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.28) 1.2px, transparent 1.4px);
+  background-size: 16px 16px;
+  mask-image: linear-gradient(120deg, #000 10%, transparent 70%);
+  -webkit-mask-image: linear-gradient(120deg, #000 10%, transparent 70%);
+}
+
+.sc-hero::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.9s;
+}
+
+.svc-card:hover .sc-hero::after {
+  left: 130%;
+}
+
+.sc-mark {
+  position: absolute;
+  right: -18px;
+  bottom: -26px;
+  width: 150px;
+  height: 150px;
+  opacity: 0.18;
+}
+
+.sc-mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sc-num {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  font-family: 'Sora';
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: #fff;
+  letter-spacing: 0.1em;
+  opacity: 0.9;
+}
+
+.sc-count {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+  padding: 6px 11px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(8px);
+}
+
+.sc-icon {
+  position: absolute;
+  left: 20px;
+  bottom: 22px;
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.sc-icon svg {
+  width: 34px;
+  height: 34px;
+}
+
+.sc-pills {
+  position: absolute;
+  right: 16px;
+  bottom: 20px;
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+  max-width: 58%;
+}
+
+.sc-pills span {
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(2, 26, 26, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  animation: bob 5s ease-in-out infinite;
+}
+
+.sc-pills span:nth-child(2) {
+  animation-delay: -2.5s;
+  margin-right: 14px;
+}
+
+.sc-body {
+  padding: 20px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.sc-body h3 {
+  font-size: 1.22rem;
+  margin-bottom: 6px;
+}
+
+.sc-body p {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.segchips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.segchips span {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 20px;
+  box-shadow: none;
+  background: color-mix(in srgb, var(--c) 12%, #fff);
+  color: color-mix(in srgb, var(--c) 70%, #021a1a);
+}
+
+.svc-card .back {
+  padding: 0;
+  overflow: hidden;
+  background: linear-gradient(170deg, color-mix(in srgb, var(--c) 10%, rgba(255, 255, 255, 0.85)), rgba(255, 255, 255, 0.55));
+}
+
+.svc-card .back ul {
+  padding: 16px 22px 0;
+}
+
+.svc-card .back .btn {
+  margin: auto 22px 20px;
+}
+
+@media (max-width: 960px) {
+  .results {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .results {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -1,0 +1,206 @@
+.wiz-card {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.wiz-progress {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.wiz-step-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: var(--neu-sm);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: left;
+}
+
+.wiz-step-pill span {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(15, 181, 173, 0.14);
+  color: var(--deep);
+  flex: none;
+}
+
+.wiz-step-pill em {
+  font-style: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wiz-step-pill.on {
+  box-shadow: var(--neu-in);
+  color: var(--deep);
+}
+
+.wiz-step-pill.on span {
+  background: var(--tq);
+  color: #fff;
+}
+
+.wiz-step-pill.done span {
+  background: var(--deep);
+  color: #fff;
+}
+
+.wiz-bar-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(8, 81, 77, 0.1);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.wiz-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--tq2), var(--deep));
+  transition: width 0.35s ease;
+}
+
+.wiz-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.wiz-panel h3 {
+  font-size: 1.25rem;
+  margin-bottom: 4px;
+}
+
+.wiz-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.wiz-three {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.wiz-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wiz-chip {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 30px;
+  background: var(--bg);
+  box-shadow: var(--neu-sm);
+  color: var(--ink);
+  transition: 0.2s;
+}
+
+.wiz-chip.on {
+  box-shadow: var(--neu-in);
+  color: var(--deep);
+}
+
+.wiz-repeat {
+  display: grid;
+  gap: 8px;
+}
+
+.wiz-repeat-row {
+  display: flex;
+  gap: 8px;
+}
+
+.wiz-repeat-row input {
+  flex: 1;
+}
+
+.wiz-review {
+  display: grid;
+  gap: 12px;
+}
+
+.wiz-rev-card {
+  padding: 16px 18px;
+  border-radius: 16px;
+}
+
+.wiz-rev-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.wiz-rev-head button {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--tq);
+}
+
+.wiz-rev-card p {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.wiz-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(8, 81, 77, 0.1);
+}
+
+.wiz-success {
+  text-align: center;
+  padding: 48px 28px;
+}
+
+.wiz-success h2 {
+  margin-bottom: 10px;
+}
+
+.wiz-success p {
+  color: var(--muted);
+  margin-bottom: 22px;
+}
+
+@media (max-width: 960px) {
+  .wiz-progress {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .wiz-three {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .wiz-card {
+    padding: 20px 16px;
+  }
+  .wiz-progress {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .wiz-two,
+  .wiz-three {
+    grid-template-columns: 1fr;
+  }
+}
+

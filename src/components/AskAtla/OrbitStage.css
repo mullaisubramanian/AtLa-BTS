@@ -1,0 +1,71 @@
+.ask-sec {
+  padding: 70px 0 20px;
+}
+
+.orbit-stage {
+  position: relative;
+  height: 460px;
+  margin: 0 auto;
+  max-width: 1150px;
+}
+
+.orbit-ring {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 12%;
+  bottom: 12%;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(15, 181, 173, 0.3);
+}
+
+.orb {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 9px 15px;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid #fff;
+  box-shadow: var(--neu-sm);
+  color: var(--deep);
+  cursor: pointer;
+  will-change: transform, opacity;
+  transition: background 0.2s;
+}
+
+.orb::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--c, #0fb5ad);
+  margin-right: 8px;
+  vertical-align: 1px;
+}
+
+.orb:hover {
+  background: #fff;
+  color: var(--tq);
+}
+
+@media (max-width: 700px) {
+  .orbit-stage {
+    height: 520px;
+  }
+  .orbit-ring {
+    left: 2%;
+    right: 2%;
+    top: 4%;
+    bottom: 4%;
+  }
+  .orb {
+    font-size: 0.7rem;
+    padding: 7px 11px;
+  }
+}
+

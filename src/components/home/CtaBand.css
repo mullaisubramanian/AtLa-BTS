@@ -1,0 +1,33 @@
+.cta-band {
+  padding: 56px 40px;
+  text-align: center;
+  border-radius: 32px;
+  background: linear-gradient(135deg, rgba(25, 211, 197, 0.85), rgba(8, 81, 77, 0.95));
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(8, 81, 77, 0.25);
+}
+
+.cta-band h2 {
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+  margin-bottom: 12px;
+}
+
+.cta-band p {
+  color: #d4fffa;
+  max-width: 600px;
+  margin: 0 auto 26px;
+}
+
+.cta-band .btn-neu {
+  background: #fff;
+  box-shadow: none;
+}
+
+@media (max-width: 600px) {
+  .cta-band {
+    padding: 40px 22px;
+  }
+}
+

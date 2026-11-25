@@ -1,0 +1,20 @@
+.fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 60;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--tq2), var(--deep));
+  color: #fff;
+  box-shadow: 0 14px 30px rgba(8, 81, 77, 0.4);
+  animation: pulse 2.5s infinite;
+}
+
+.fab svg {
+  width: 28px;
+}
+

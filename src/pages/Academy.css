@@ -1,0 +1,60 @@
+.track-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.trk {
+  padding: 28px;
+}
+
+.trk .lvl {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tq);
+}
+
+.trk h3 {
+  font-size: 1.2rem;
+  margin: 8px 0 10px;
+}
+
+.trk ul {
+  list-style: none;
+  display: grid;
+  gap: 7px;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.trk li::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  transform: rotate(45deg);
+  background: var(--tq);
+  margin-right: 9px;
+  vertical-align: 2px;
+}
+
+.trk .out {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(8, 81, 77, 0.2);
+  font-size: 0.84rem;
+}
+
+.trk .out b {
+  color: var(--deep);
+}
+
+@media (max-width: 960px) {
+  .track-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

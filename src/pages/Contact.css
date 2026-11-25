@@ -1,0 +1,119 @@
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 30px;
+}
+
+.c-info {
+  padding: 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.c-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.c-row .ic {
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+  box-shadow: var(--neu-sm);
+  flex: none;
+}
+
+.c-row .ic svg {
+  width: 22px;
+}
+
+.c-row small {
+  color: var(--muted);
+  display: block;
+  font-size: 0.76rem;
+}
+
+.form {
+  padding: 34px;
+  display: grid;
+  gap: 16px;
+}
+
+.form .two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--deep);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: var(--neu-in);
+  font-family: inherit;
+  font-size: 0.92rem;
+  color: var(--ink);
+  outline: none;
+}
+
+.field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.interest {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.interest label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 8px 13px;
+  border-radius: 30px;
+  background: var(--bg);
+  box-shadow: var(--neu-sm);
+  cursor: pointer;
+  margin: 0;
+  color: var(--ink);
+}
+
+.interest input {
+  display: none;
+}
+
+.interest label:has(input:checked) {
+  box-shadow: var(--neu-in);
+  color: var(--deep);
+}
+
+@media (max-width: 960px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .form .two {
+    grid-template-columns: 1fr;
+  }
+}
+
