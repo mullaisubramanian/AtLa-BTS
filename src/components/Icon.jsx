@@ -38,6 +38,7 @@ const ICON = {
   data: 'M4 20V11M10 20V4M16 20v-8M22 20H2',
   consult: 'M12 22a10 10 0 100-20 10 10 0 000 20zM16.2 7.8l-2.1 6.3-6.3 2.1 2.1-6.3z',
   academy: 'M2 9l10-5 10 5-10 5zM6 11v5c3 2.5 9 2.5 12 0v-5M22 9v6',
+  instagram: 'M7 3h10a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7a4 4 0 014-4zM16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zM17.5 6.5h.01',
 };
 
 export default function Icon({ name, color = 'currentColor', className = '', wrap = true }) {

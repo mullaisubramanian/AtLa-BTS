@@ -4,7 +4,7 @@ import { useModals } from '../context/ModalContext';
 import { useFocusTrap } from '../lib/useFocusTrap';
 import { submitLead } from '../lib/api';
 import { fmt } from '../lib/format';
-import { waLink } from '../config/site';
+import { SITE_CONFIG } from '../config/site';
 import {
   ACADEMY_TRACKS,
   BUDGET_RANGES,
@@ -35,7 +35,6 @@ export default function QuickEnquiryModal() {
   const [budget, setBudget] = useState('not_sure');
   const [academyTrack, setAcademyTrack] = useState(ACADEMY_TRACKS[0]);
   const [message, setMessage] = useState('');
-  const [whatsappOptIn, setWhatsappOptIn] = useState(true);
   const [consent, setConsent] = useState(false);
   const [honeypot, setHoneypot] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -53,7 +52,6 @@ export default function QuickEnquiryModal() {
     setBudget(knownAmount ? budgetForAmount(knownAmount) : 'not_sure');
     setAcademyTrack(quickEnquiry.academyTrack || ACADEMY_TRACKS[0]);
     setMessage(quickEnquiry.defaultMessage || '');
-    setWhatsappOptIn(true);
     setConsent(false);
     setHoneypot('');
     setFieldErrors({});
@@ -75,18 +73,20 @@ export default function QuickEnquiryModal() {
 
   const isServeMode = quickEnquiry.source === 'cocktail_serve';
   const isServeReady =
-    Boolean(fullName.trim()) && isValidTenDigitPhone(phone) && Boolean(consent);
+    Boolean(fullName.trim()) &&
+    (!phone.trim() || isValidTenDigitPhone(phone)) &&
+    Boolean(consent);
 
   const validateSingleField = (field, value) => {
     let msg = '';
     if (field === 'fullName') {
       msg = String(value || '').trim() ? '' : 'Name is required';
     } else if (field === 'phone') {
-      msg = validatePhoneInput(value);
+      msg = validatePhoneInput(value, { required: false });
     } else if (field === 'email') {
       msg = validateEmail(value);
     } else if (field === 'consent') {
-      msg = value ? '' : 'Please agree to be contacted by ATLABTS about your enquiry.';
+      msg = value ? '' : 'Please agree to be contacted by AtLa/BTS about your enquiry.';
     }
     setFieldErrors((prev) => ({ ...prev, [field]: msg }));
     return msg;
@@ -103,9 +103,9 @@ export default function QuickEnquiryModal() {
 
     const nextErrors = {
       fullName: fullName.trim() ? '' : 'Name is required',
-      phone: validatePhoneInput(phone),
+      phone: validatePhoneInput(phone, { required: false }),
       email: validateEmail(email),
-      consent: consent ? '' : 'Please agree to be contacted by ATLABTS about your enquiry.',
+      consent: consent ? '' : 'Please agree to be contacted by AtLa/BTS about your enquiry.',
     };
     setFieldErrors(nextErrors);
 
@@ -113,16 +113,16 @@ export default function QuickEnquiryModal() {
       return;
     }
 
-    const formattedPhone = formatPhoneForSubmit(phone);
+    const formattedPhone = phone.trim() ? formatPhoneForSubmit(phone) : '';
     setSubmitting(true);
     const { data, error } = await submitLead({
       contact: {
         full_name: fullName,
         phone: formattedPhone,
-        whatsapp: formattedPhone,
+        whatsapp: '',
         email,
-        preferred_channel: 'whatsapp',
-        whatsapp_opt_in: whatsappOptIn,
+        preferred_channel: 'email',
+        whatsapp_opt_in: false,
       },
       company: companyName.trim()
         ? {
@@ -155,7 +155,6 @@ export default function QuickEnquiryModal() {
   };
 
   const refCode = submittedLeadId ? String(submittedLeadId).slice(0, 8).toUpperCase() : '';
-  const waHref = waLink(`Hi ATLABTS, my enquiry reference is ${refCode}.`);
 
   return (
     <div
@@ -171,7 +170,7 @@ export default function QuickEnquiryModal() {
         <div className="qe-head">
           <div>
             <small className="qe-eyebrow">Quick Enquiry</small>
-            <h2 id="quick-enquiry-title">{quickEnquiry.title || 'Talk to ATLABTS'}</h2>
+            <h2 id="quick-enquiry-title">{quickEnquiry.title || 'Talk to AtLa/BTS'}</h2>
           </div>
           <button
             type="button"
@@ -189,7 +188,7 @@ export default function QuickEnquiryModal() {
               <div className="qe-check">
                 <Icon name="check" color="#fff" wrap={false} />
               </div>
-              <h3>We&apos;ll call you within one business day</h3>
+              <h3>We&apos;ll reply within one business day</h3>
               <p>
                 Your enquiry has been saved. Reference number:{' '}
                 <strong className="qe-ref">{refCode}</strong>
@@ -197,11 +196,14 @@ export default function QuickEnquiryModal() {
               <div className="qe-success-acts">
                 <a
                   className="btn btn-primary"
-                  href={waHref}
+                  href={SITE_CONFIG.instagramUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
-                  Chat on WhatsApp now →
+                  <span style={{ display: 'inline-flex', width: '18px', height: '18px', flexShrink: 0 }}>
+                    <Icon name="instagram" color="currentColor" wrap={false} />
+                  </span>
+                  DM us on Instagram ({SITE_CONFIG.instagramHandle}) →
                 </a>
                 <Link
                   className="btn btn-neu"
@@ -254,7 +256,7 @@ export default function QuickEnquiryModal() {
 
                   {quickEnquiry.askQuestion && (
                     <div>
-                      <small>Your question to ATLA AI</small>
+                      <small>Your question to AtLa/BTS AI</small>
                       <b>&quot;{quickEnquiry.askQuestion}&quot;</b>
                     </div>
                   )}
@@ -307,12 +309,9 @@ export default function QuickEnquiryModal() {
                   </div>
 
                   <div className={`field ${fieldErrors.phone ? 'is-error' : ''}`}>
-                    <label htmlFor="qe-phone">
-                      Phone / WhatsApp <span className="req" aria-hidden="true">*</span>
-                    </label>
+                    <label htmlFor="qe-phone">Phone (optional)</label>
                     <PhoneInput
                       id="qe-phone"
-                      required
                       value={phone}
                       hasError={Boolean(fieldErrors.phone)}
                       onChange={(val) => {
@@ -417,15 +416,6 @@ export default function QuickEnquiryModal() {
                   </div>
                 </div>
 
-                <label className="check">
-                  <input
-                    type="checkbox"
-                    checked={whatsappOptIn}
-                    onChange={(e) => setWhatsappOptIn(e.target.checked)}
-                  />
-                  <span>Send me updates on WhatsApp</span>
-                </label>
-
                 <div className="field">
                   <label className={`check ${fieldErrors.consent ? 'is-error' : ''}`}>
                     <input
@@ -438,7 +428,7 @@ export default function QuickEnquiryModal() {
                       }}
                     />
                     <span>
-                      I agree to be contacted by ATLABTS about my enquiry.{' '}
+                      I agree to be contacted by AtLa/BTS about my enquiry.{' '}
                       <span className="req" aria-hidden="true">*</span>
                     </span>
                   </label>

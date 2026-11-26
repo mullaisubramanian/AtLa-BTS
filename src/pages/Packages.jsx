@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { fmt } from '../lib/format';
+import { SITE_CONFIG } from '../config/site';
 import { useCatalogue } from '../context/CatalogueContext';
-import { useModals } from '../context/ModalContext';
 import { track } from '../lib/api';
 import Eyebrow from '../components/Eyebrow';
 import Icon from '../components/Icon';
@@ -11,7 +11,6 @@ import './Packages.css';
 
 export default function Packages() {
   const { packages, menu } = useCatalogue();
-  const { openQuickEnquiry } = useModals();
   const [flippedMap, setFlippedMap] = useState({});
 
   const toggleFlip = (pkg) => {
@@ -25,10 +24,11 @@ export default function Packages() {
   return (
     <section className="page-enter">
       <Helmet>
-        <title>Packages — ATLABTS</title>
+        <title>Packages — AtLa/BTS</title>
+        <meta property="og:title" content="Packages — AtLa/BTS" />
         <meta
           name="description"
-          content="Choose from Good, Great, Fantastic or Super monthly growth packages from ATLABTS — each including everything in the level below it."
+          content="Choose from Good, Great, Fantastic or Super monthly growth packages from AtLa/BTS — each including everything in the level below it."
         />
       </Helmet>
 
@@ -131,24 +131,21 @@ export default function Packages() {
                           </li>
                         ))}
                       </ul>
-                      <button
-                        type="button"
+                      <a
                         className="btn btn-primary pk-btn"
+                        href={SITE_CONFIG.instagramUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         onClick={(e) => {
                           e.stopPropagation();
-                          openQuickEnquiry({
+                          track('negotiate_click', {
                             source: 'package_negotiate',
-                            title: `Negotiate ${p.name} Package`,
-                            packageId: p.id,
-                            packageName: p.name,
-                            packagePrice: p.price,
-                            packageColor: p.color,
-                            defaultMessage: `Let's negotiate the ${p.name} package.`,
+                            package_id: p.id,
                           });
                         }}
                       >
                         Let&apos;s negotiate →
-                      </button>
+                      </a>
                     </>
                   }
                 />

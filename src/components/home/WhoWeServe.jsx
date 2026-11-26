@@ -13,7 +13,7 @@ export default function WhoWeServe() {
             Wherever you are, <span className="grad">we take you further</span>
           </h2>
           <p>
-            ATLABTS isn&apos;t only for startups. Most of our work is with established businesses
+            AtLa/BTS isn&apos;t only for startups. Most of our work is with established businesses
             that already have customers, teams and revenue, and want more of all three.
           </p>
         </div>

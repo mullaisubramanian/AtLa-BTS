@@ -40,7 +40,7 @@ export default function WhyUs() {
     <div className="section" style={{ paddingTop: '20px' }}>
       <div className="wrap">
         <div className="sec-head">
-          <Eyebrow>Why ATLABTS</Eyebrow>
+          <Eyebrow>Why AtLa/BTS</Eyebrow>
           <h2>
             Built for <span className="grad">credibility</span>, measured in outcomes
           </h2>

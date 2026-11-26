@@ -56,7 +56,7 @@ export default function Hero() {
       <div className="wrap">
         <div className="hero-grid">
           <div>
-            <Eyebrow>ATLA Business Transformation System</Eyebrow>
+            <Eyebrow>AtLa/BTS</Eyebrow>
             <h1>
               Build a business that
               <br />

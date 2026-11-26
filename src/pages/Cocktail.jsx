@@ -88,10 +88,11 @@ export default function Cocktail() {
   return (
     <section className="page-enter">
       <Helmet>
-        <title>Service Cocktail — ATLABTS</title>
+        <title>Service Cocktail — AtLa/BTS</title>
+        <meta property="og:title" content="Service Cocktail — AtLa/BTS" />
         <meta
           name="description"
-          content="Mix your own custom ATLABTS growth recipe. Drag or tap services into the glass and calculate your monthly estimate or compare with packages."
+          content="Mix your own custom AtLa/BTS growth recipe. Drag or tap services into the glass and calculate your monthly estimate or compare with packages."
         />
       </Helmet>
 

@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PAGES } from '../../data/askAtla';
 import { countServices } from '../../data/practices';
+import { SITE_CONFIG } from '../../config/site';
+import { track } from '../../lib/api';
 import { useModals } from '../../context/ModalContext';
 import { useReducedMotion } from '../../lib/useReducedMotion';
 import RichText from '../RichText';
@@ -144,7 +146,10 @@ export default function ChatMessage({ message, onRevealStart, onComplete }) {
       logAskClick(clickedLabel);
     }
     closeAsk();
-    if (act[0] === 'open') {
+    if (act[0] === 'instagram') {
+      track('negotiate_click', { source: 'ask_atla' });
+      window.open(SITE_CONFIG.instagramUrl, '_blank', 'noopener,noreferrer');
+    } else if (act[0] === 'open') {
       window.setTimeout(() => openPractice(act[1], act[2]), 60);
     } else if (act[0] === 'go') {
       navigate(act[1]);
@@ -157,7 +162,7 @@ export default function ChatMessage({ message, onRevealStart, onComplete }) {
         interests: message.answer?.matchedPracticeId
           ? [message.answer.matchedPracticeId]
           : [],
-        defaultMessage: `I asked ATLA AI: "${message.question}"\nI'd like to discuss this with a strategist.`,
+        defaultMessage: `I asked AtLa/BTS AI: "${message.question}"\nI'd like to discuss this with a strategist.`,
       });
     }
   };
@@ -173,7 +178,7 @@ export default function ChatMessage({ message, onRevealStart, onComplete }) {
   return (
     <div className="msg bot" ref={msgRef}>
       <div className="av">
-        <img src="/logo.png" alt="ATLA AI" />
+        <img src="/logo.png" alt="AtLa/BTS AI" />
       </div>
       <div className="bub">
         {phase === 'thinking' ? (
@@ -247,7 +252,11 @@ export default function ChatMessage({ message, onRevealStart, onComplete }) {
                                 subtitle={g.desc}
                                 onClick={() =>
                                   handleAction(
-                                    g.isContact ? ['contact'] : ['go', g.path],
+                                    g.isInstagram
+                                      ? ['instagram']
+                                      : g.isContact
+                                      ? ['contact']
+                                      : ['go', g.path],
                                     g.title
                                   )
                                 }

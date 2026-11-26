@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { fmt } from '../lib/format';
-import { SITE_CONFIG, waLink } from '../config/site';
+import { SITE_CONFIG } from '../config/site';
 import { submitLead } from '../lib/api';
 import { useCatalogue } from '../context/CatalogueContext';
 import { useContactPrefill } from '../context/ContactPrefillContext';
@@ -64,14 +64,14 @@ export default function Contact() {
     if (key === 'name') {
       msg = String(value || '').trim() ? '' : 'Name is required';
     } else if (key === 'phone') {
-      msg = validatePhoneInput(value);
+      msg = validatePhoneInput(value, { required: false });
     } else if (key === 'email') {
       const cleaned = String(value || '').trim();
       msg = !cleaned || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleaned)
         ? ''
         : 'Enter a valid email address';
     } else if (key === 'consent') {
-      msg = value ? '' : 'Please agree to be contacted by ATLABTS about your enquiry.';
+      msg = value ? '' : 'Please agree to be contacted by AtLa/BTS about your enquiry.';
     }
     setFieldErrors((prev) => ({ ...prev, [key]: msg }));
     return msg;
@@ -91,14 +91,14 @@ export default function Contact() {
     const cleanedEmail = form.email.trim();
     const nextErrors = {
       name: form.name.trim() ? '' : 'Name is required',
-      phone: validatePhoneInput(form.phone),
+      phone: validatePhoneInput(form.phone, { required: false }),
       email:
         !cleanedEmail || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanedEmail)
           ? ''
           : 'Enter a valid email address',
       consent: form.consent
         ? ''
-        : 'Please agree to be contacted by ATLABTS about your enquiry.',
+        : 'Please agree to be contacted by AtLa/BTS about your enquiry.',
     };
     setFieldErrors(nextErrors);
 
@@ -106,7 +106,7 @@ export default function Contact() {
       return;
     }
 
-    const formattedPhone = formatPhoneForSubmit(form.phone);
+    const formattedPhone = form.phone.trim() ? formatPhoneForSubmit(form.phone) : '';
     setSubmitting(true);
     const isCocktail = form.packageId === 'custom_cocktail';
     const isProject = form.packageId === 'project';
@@ -114,10 +114,10 @@ export default function Contact() {
       contact: {
         full_name: form.name,
         phone: formattedPhone,
-        whatsapp: formattedPhone,
+        whatsapp: '',
         email: form.email,
-        preferred_channel: 'whatsapp',
-        whatsapp_opt_in: true,
+        preferred_channel: 'email',
+        whatsapp_opt_in: false,
       },
       company: form.company.trim()
         ? {
@@ -151,10 +151,11 @@ export default function Contact() {
   return (
     <section className="page-enter">
       <Helmet>
-        <title>Talk to us — ATLABTS</title>
+        <title>Talk to us — AtLa/BTS</title>
+        <meta property="og:title" content="Talk to us — AtLa/BTS" />
         <meta
           name="description"
-          content="Book a free 30-minute transformation call with ATLABTS and receive a mini audit of your social media, website, AI-search visibility and automation opportunities."
+          content="Connect with AtLa/BTS for a free 30-minute transformation session and receive a mini audit of your social media, website, AI-search visibility and automation opportunities."
         />
       </Helmet>
 
@@ -177,30 +178,16 @@ export default function Contact() {
 
               <a
                 className="c-row"
-                href={waLink()}
+                href={SITE_CONFIG.instagramUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
               >
                 <div className="ic">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#0fb5ad" strokeWidth="2" aria-hidden="true">
-                    <path d="M21 12a9 9 0 01-13.5 7.8L3 21l1.3-4.4A9 9 0 1121 12z" />
-                  </svg>
+                  <Icon name="instagram" color="#0fb5ad" wrap={false} />
                 </div>
                 <div>
-                  <small>WhatsApp</small>
-                  <b>{SITE_CONFIG.whatsappDisplay}</b>
-                </div>
-              </a>
-
-              <a className="c-row" href={`tel:${SITE_CONFIG.phoneTel}`}>
-                <div className="ic">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#0fb5ad" strokeWidth="2" aria-hidden="true">
-                    <path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.7 2.7a2 2 0 01-.5 2.1L8.1 9.7a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.5c.9.4 1.8.6 2.7.7a2 2 0 011.9 2.2z" />
-                  </svg>
-                </div>
-                <div>
-                  <small>Phone</small>
-                  <b>{SITE_CONFIG.whatsappDisplay}</b>
+                  <small>DM us on Instagram</small>
+                  <b>{SITE_CONFIG.instagramHandle}</b>
                 </div>
               </a>
 
@@ -305,12 +292,9 @@ export default function Contact() {
                 </div>
 
                 <div className={`field ${fieldErrors.phone ? 'is-error' : ''}`}>
-                  <label htmlFor="c-phone">
-                    Phone / WhatsApp <span className="req" aria-hidden="true">*</span>
-                  </label>
+                  <label htmlFor="c-phone">Phone (optional)</label>
                   <PhoneInput
                     id="c-phone"
-                    required
                     name="phone"
                     value={form.phone}
                     hasError={Boolean(fieldErrors.phone)}
@@ -437,7 +421,7 @@ export default function Contact() {
                     }}
                   />
                   <span>
-                    I agree to be contacted by ATLABTS about my enquiry.{' '}
+                    I agree to be contacted by AtLa/BTS about my enquiry.{' '}
                     <span className="req" aria-hidden="true">*</span>
                   </span>
                 </label>
@@ -467,7 +451,7 @@ export default function Contact() {
                 disabled={submitting}
                 style={{ justifyContent: 'center' }}
               >
-                {submitting ? 'Sending…' : 'Send & book my free call →'}
+                {submitting ? 'Sending…' : 'Send enquiry →'}
               </button>
             </form>
           </div>

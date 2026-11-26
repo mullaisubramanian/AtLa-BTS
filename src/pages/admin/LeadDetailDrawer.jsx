@@ -162,7 +162,8 @@ export default function LeadDetailDrawer({
   const { lead, contact, company, profile, quote, quoteItems, askMessages, activities } =
     detail || {};
 
-  const waDigits = (contact?.whatsapp || contact?.phone || '').replace(/\D/g, '');
+  const displayPhone =
+    contact?.phone && contact.phone !== '--------' ? contact.phone : '—';
 
   return (
     <div
@@ -269,33 +270,20 @@ export default function LeadDetailDrawer({
                     </div>
                     <div>
                       <small>Phone</small>
-                      <b>{contact.phone}</b>
+                      <b>{displayPhone}</b>
                     </div>
                     <div>
                       <small>Email</small>
                       <b>{contact.email || '—'}</b>
                     </div>
                   </div>
-                  <div className="adm-actions-row">
-                    <a className="btn btn-neu" href={`tel:${contact.phone}`}>
-                      Call
-                    </a>
-                    {waDigits && (
-                      <a
-                        className="btn btn-primary"
-                        href={`https://wa.me/${waDigits}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        WhatsApp
-                      </a>
-                    )}
-                    {contact.email && (
+                  {contact.email && (
+                    <div className="adm-actions-row">
                       <a className="btn btn-neu" href={`mailto:${contact.email}`}>
                         Email
                       </a>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               )}
 

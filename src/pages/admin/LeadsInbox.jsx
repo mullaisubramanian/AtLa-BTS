@@ -190,7 +190,9 @@ export default function LeadsInbox({ leads, staffList, onSelectLead }) {
                     <td>{l.created_at ? new Date(l.created_at).toLocaleDateString('en-IN') : '—'}</td>
                     <td>
                       <b>{l.full_name}</b>
-                      <div style={{ fontSize: '0.74rem', color: 'var(--muted)' }}>{l.phone}</div>
+                      <div style={{ fontSize: '0.74rem', color: 'var(--muted)' }}>
+                        {l.phone && l.phone !== '--------' ? l.phone : l.email || '—'}
+                      </div>
                     </td>
                     <td>{l.company || '—'}</td>
                     <td>

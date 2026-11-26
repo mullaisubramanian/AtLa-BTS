@@ -14,7 +14,7 @@ export default function SystemLayers() {
     <div className="section" id="system">
       <div className="wrap">
         <div className="sec-head">
-          <Eyebrow>The ATLA Business Transformation System</Eyebrow>
+          <Eyebrow>AtLa/BTS</Eyebrow>
           <h2>
             Not a list of services. <span className="grad">A system for growth.</span>
           </h2>

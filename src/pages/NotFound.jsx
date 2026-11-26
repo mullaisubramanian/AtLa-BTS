@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <section className="page-enter">
       <Helmet>
-        <title>Page Not Found — ATLABTS</title>
+        <title>Page Not Found — AtLa/BTS</title>
         <meta name="description" content="The requested page could not be found." />
       </Helmet>
 
@@ -18,8 +18,8 @@ export default function NotFound() {
               Page not <span className="grad">found</span>
             </h1>
             <p style={{ color: 'var(--muted)', marginBottom: '26px' }}>
-              That route doesn&apos;t exist in the ATLA Business Transformation System. Head back
-              home or explore our 11 practices.
+              That route doesn&apos;t exist on the AtLa/BTS website. Head back home or explore our 11
+              practices.
             </p>
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link className="btn btn-primary" to="/">

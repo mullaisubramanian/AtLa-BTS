@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import Logo from '../Logo';
+import Icon from '../Icon';
 import { useCatalogue } from '../../context/CatalogueContext';
 import { useModals } from '../../context/ModalContext';
-import { SITE_CONFIG, waLink } from '../../config/site';
+import { SITE_CONFIG } from '../../config/site';
 import './Footer.css';
 
 export default function Footer() {
@@ -23,8 +24,8 @@ export default function Footer() {
               </div>
             </Link>
             <p className="foot-blurb">
-              ATLA Business Transformation System: growth, brand, AI, platforms and learning under
-              one roof, for startups, SMEs, enterprises and institutions.
+              AtLa/BTS: growth, brand, AI, platforms and learning under one roof, for startups, SMEs,
+              enterprises and institutions.
             </p>
           </div>
 
@@ -56,33 +57,29 @@ export default function Footer() {
           <div>
             <h5>Connect</h5>
             <Link to="/contact">Contact</Link>
-            <a href={`tel:${SITE_CONFIG.phoneTel}`}>{SITE_CONFIG.whatsappDisplay}</a>
             <a
-              href={waLink()}
+              className="foot-ig"
+              href={SITE_CONFIG.instagramUrl}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
-              WhatsApp
+              <Icon name="instagram" color="var(--teal)" wrap={false} />
+              <span>
+                DM us on Instagram · <b>{SITE_CONFIG.instagramHandle}</b>
+              </span>
             </a>
             <a href={`mailto:${SITE_CONFIG.email}`}>{SITE_CONFIG.email}</a>
             {SITE_CONFIG.linkedinUrl ? (
-              <a href={SITE_CONFIG.linkedinUrl} target="_blank" rel="noreferrer">
+              <a href={SITE_CONFIG.linkedinUrl} target="_blank" rel="noopener noreferrer">
                 LinkedIn
               </a>
             ) : (
               <Link to="/contact">LinkedIn</Link>
             )}
-            {SITE_CONFIG.instagramUrl ? (
-              <a href={SITE_CONFIG.instagramUrl} target="_blank" rel="noreferrer">
-                Instagram
-              </a>
-            ) : (
-              <Link to="/contact">Instagram</Link>
-            )}
           </div>
         </div>
         <p className="copy">
-          © {year} ATLABTS · ATLA Business Transformation System. All rights reserved.
+          © {year} AtLa/BTS · Business Transformation System. All rights reserved.
         </p>
       </div>
     </footer>

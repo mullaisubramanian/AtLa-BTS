@@ -70,7 +70,7 @@ export default function AskModal() {
         <div className="ask-head">
           <Logo className="comp-logo" />
           <div>
-            <b id="ask-modal-title">ATLA AI</b>
+            <b id="ask-modal-title">AtLa/BTS AI</b>
             <small>Business growth assistant</small>
           </div>
           <button

@@ -36,6 +36,18 @@
   color: var(--deep);
 }
 
+.foot a.foot-ig {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.foot a.foot-ig svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+
 .copy {
   text-align: center;
   font-size: 0.8rem;

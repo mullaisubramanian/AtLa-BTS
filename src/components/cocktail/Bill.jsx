@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fmt } from '../../lib/format';
+import { SITE_CONFIG } from '../../config/site';
+import { track } from '../../lib/api';
 import { useCatalogue } from '../../context/CatalogueContext';
 import { useModals } from '../../context/ModalContext';
 import Icon from '../Icon';
@@ -76,36 +78,19 @@ export default function Bill({
     [items]
   );
 
-  const openCocktailModal = (mode) => {
+  const openCocktailModal = () => {
     if (!items.length || !quoteResult) return;
-    const isNegotiate = mode === 'negotiate';
     openQuickEnquiry({
-      source: isNegotiate ? 'cocktail_negotiate' : 'cocktail_serve',
-      title: isNegotiate ? "Let's negotiate your cocktail" : 'Serve my Service Cocktail',
+      source: 'cocktail_serve',
+      title: 'Serve my Service Cocktail',
       cocktailItems: items,
       cocktailTotal: quoteResult.total,
       isCustomCocktail: true,
       cocktailQuoteId: quoteResult.quote_id,
       interests: uniqueInterests,
-      defaultMessage: isNegotiate
-        ? `Let's negotiate my Service Cocktail:\n${items
-            .map((m) => `• ${m.n}`)
-            .join('\n')}\nCalculated price: ${fmt(quoteResult.total)}/month`
-        : `My Service Cocktail:\n${items
-            .map((m) => `• ${m.n}`)
-            .join('\n')}\nEstimated: ${fmt(quoteResult.total)}/month`,
-    });
-  };
-
-  const openPackageModal = (pkg) => {
-    openQuickEnquiry({
-      source: 'package_negotiate',
-      title: `Negotiate ${pkg.name} Package`,
-      packageId: pkg.id,
-      packageName: pkg.name,
-      packagePrice: pkg.price,
-      packageColor: pkg.color,
-      defaultMessage: `Let's negotiate the ${pkg.name} package.`,
+      defaultMessage: `My Service Cocktail:\n${items
+        .map((m) => `• ${m.n}`)
+        .join('\n')}\nEstimated: ${fmt(quoteResult.total)}/month`,
     });
   };
 
@@ -197,14 +182,21 @@ export default function Bill({
               >
                 See {tipInfo.best.name} →
               </Link>{' '}
-              <button
-                type="button"
+              <a
                 className="btn btn-neu"
                 style={{ marginTop: '10px', padding: '9px 16px', fontSize: '.8rem' }}
-                onClick={() => openPackageModal(tipInfo.best)}
+                href={SITE_CONFIG.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  track('negotiate_click', {
+                    source: 'package_negotiate',
+                    package_id: tipInfo.best.id,
+                  })
+                }
               >
                 Let&apos;s negotiate →
-              </button>
+              </a>
             </>
           ) : (
             <>
@@ -222,14 +214,21 @@ export default function Bill({
               >
                 Compare packages →
               </Link>{' '}
-              <button
-                type="button"
+              <a
                 className="btn btn-primary"
                 style={{ marginTop: '10px', padding: '9px 16px', fontSize: '.8rem' }}
-                onClick={() => openPackageModal(tipInfo.best)}
+                href={SITE_CONFIG.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  track('negotiate_click', {
+                    source: 'package_negotiate',
+                    package_id: tipInfo.best.id,
+                  })
+                }
               >
                 Let&apos;s negotiate →
-              </button>
+              </a>
             </>
           )}
         </div>
@@ -244,17 +243,23 @@ export default function Bill({
             type="button"
             className="btn btn-neu"
             style={{ color: 'var(--deep)' }}
-            onClick={() => openCocktailModal('serve')}
+            onClick={openCocktailModal}
           >
             Serve it to me →
           </button>
-          <button
-            type="button"
+          <a
             className="btn btn-primary neg-row"
-            onClick={() => openCocktailModal('negotiate')}
+            href={SITE_CONFIG.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              track('negotiate_click', {
+                source: 'cocktail_negotiate',
+              })
+            }
           >
             Let&apos;s negotiate →
-          </button>
+          </a>
         </div>
       )}
     </div>

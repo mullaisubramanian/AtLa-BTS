@@ -189,10 +189,10 @@ export async function submitLead(payload) {
       ...c,
       full_name: cleanString(c.full_name || ''),
       designation: cleanString(c.designation || '') || null,
-      phone: cleanString(c.phone || ''),
-      whatsapp: cleanString(c.whatsapp || c.phone || ''),
+      phone: cleanString(c.phone || '') || '--------',
+      whatsapp: cleanString(c.whatsapp || '') || null,
       email: c.email ? cleanString(c.email).toLowerCase() : null,
-      preferred_channel: c.preferred_channel || 'whatsapp',
+      preferred_channel: c.preferred_channel || 'email',
       whatsapp_opt_in: Boolean(c.whatsapp_opt_in),
     },
     company: co.name

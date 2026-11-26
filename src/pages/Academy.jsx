@@ -84,7 +84,8 @@ export default function Academy() {
   return (
     <section className="page-enter">
       <Helmet>
-        <title>ATLA Academy — ATLABTS</title>
+        <title>ATLA Academy — AtLa/BTS</title>
+        <meta property="og:title" content="ATLA Academy — AtLa/BTS" />
         <meta
           name="description"
           content="Hands-on programmes in AI, digital growth, automation and branding for individuals, corporate teams, students and institutions."

@@ -38,7 +38,8 @@ export default function Services() {
   return (
     <section className="page-enter">
       <Helmet>
-        <title>Services — ATLABTS</title>
+        <title>Services — AtLa/BTS</title>
+        <meta property="og:title" content="Services — AtLa/BTS" />
         <meta
           name="description"
           content="Explore all 11 practices and 300+ services across Digital Growth, Websites & E-commerce, AI Search (SEO/AEO/GEO), AI Automation, SaaS/ERP/CRM Platforms, Brand, Personal Branding, Influencer Connect, Data, Consulting and ATLA Academy."

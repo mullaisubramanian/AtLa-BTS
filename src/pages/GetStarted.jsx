@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useCatalogue } from '../context/CatalogueContext';
 import { submitLead, track } from '../lib/api';
-import { waLink } from '../config/site';
+import { SITE_CONFIG } from '../config/site';
 import {
   BIGGEST_CHALLENGES,
   BUDGET_RANGES,
@@ -38,11 +38,8 @@ const INITIAL_DATA = {
   full_name: '',
   designation: '',
   phone: '',
-  sameWhatsapp: true,
-  whatsapp: '',
   email: '',
-  preferred_channel: 'whatsapp',
-  whatsapp_opt_in: true,
+  preferred_channel: 'email',
   // Step 2: Your business
   company_name: '',
   industry: '',
@@ -120,7 +117,10 @@ export default function GetStarted() {
   const [form, setForm] = useState(() => ({
     ...initial.form,
     phone: stripDefaultIndiaCode(initial.form.phone),
-    whatsapp: stripDefaultIndiaCode(initial.form.whatsapp),
+    preferred_channel:
+      initial.form.preferred_channel === 'whatsapp'
+        ? 'email'
+        : initial.form.preferred_channel || 'email',
   }));
   const [fieldErrors, setFieldErrors] = useState({});
   const [stepError, setStepError] = useState('');
@@ -161,12 +161,8 @@ export default function GetStarted() {
     const errors = {};
     if (s === 0) {
       if (!form.full_name.trim()) errors.full_name = 'Full name is required.';
-      const phoneErr = validatePhoneInput(form.phone);
+      const phoneErr = validatePhoneInput(form.phone, { required: false });
       if (phoneErr) errors.phone = phoneErr;
-      if (!form.sameWhatsapp) {
-        const waErr = validatePhoneInput(form.whatsapp);
-        if (waErr) errors.whatsapp = waErr;
-      }
       const cleanedEmail = form.email.trim();
       if (cleanedEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanedEmail)) {
         errors.email = 'Enter a valid email address.';
@@ -181,7 +177,7 @@ export default function GetStarted() {
       if (!form.budget) errors.budget = 'Please select your monthly budget.';
       if (!form.decision_timeline) errors.decision_timeline = 'Please select your decision timeline.';
       if (!form.consent) {
-        errors.consent = 'Please agree to be contacted by ATLABTS about your enquiry.';
+        errors.consent = 'Please agree to be contacted by AtLa/BTS about your enquiry.';
       }
     }
     return errors;
@@ -226,20 +222,17 @@ export default function GetStarted() {
       ? `Profile completed for enquiry ${refParam}`
       : form.extra_notes.trim() || 'Completed 5-step Get Started growth audit profile.';
 
-    const formattedPhone = formatPhoneForSubmit(form.phone);
-    const formattedWhatsapp = form.sameWhatsapp
-      ? formattedPhone
-      : formatPhoneForSubmit(form.whatsapp);
+    const formattedPhone = form.phone.trim() ? formatPhoneForSubmit(form.phone) : '';
 
     const { data, error } = await submitLead({
       contact: {
         full_name: form.full_name,
         designation: form.designation,
         phone: formattedPhone,
-        whatsapp: formattedWhatsapp,
+        whatsapp: '',
         email: form.email,
         preferred_channel: form.preferred_channel,
-        whatsapp_opt_in: form.whatsapp_opt_in,
+        whatsapp_opt_in: false,
       },
       company: {
         name: form.company_name,
@@ -307,11 +300,11 @@ export default function GetStarted() {
 
   if (submittedLeadId) {
     const refCode = String(submittedLeadId).slice(0, 8).toUpperCase();
-    const waHref = waLink(`Hi ATLABTS, my enquiry reference is ${refCode}.`);
     return (
       <section className="page-enter">
         <Helmet>
-          <title>Get your free growth audit — ATLABTS</title>
+          <title>Get your free growth audit — AtLa/BTS</title>
+          <meta property="og:title" content="Get your free growth audit — AtLa/BTS" />
         </Helmet>
         <div className="section">
           <div className="wrap">
@@ -319,7 +312,7 @@ export default function GetStarted() {
               <div className="qe-check">
                 <Icon name="check" color="#fff" wrap={false} />
               </div>
-              <h2>We&apos;ll call you within one business day</h2>
+              <h2>We&apos;ll reply within one business day</h2>
               <p>
                 Your business profile and free audit request are saved. Reference number:{' '}
                 <strong className="qe-ref">{refCode}</strong>
@@ -327,11 +320,14 @@ export default function GetStarted() {
               <div className="qe-success-acts">
                 <a
                   className="btn btn-primary"
-                  href={waHref}
+                  href={SITE_CONFIG.instagramUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
-                  Chat on WhatsApp now →
+                  <span style={{ display: 'inline-flex', width: '18px', height: '18px', flexShrink: 0 }}>
+                    <Icon name="instagram" color="currentColor" wrap={false} />
+                  </span>
+                  DM us on Instagram ({SITE_CONFIG.instagramHandle}) →
                 </a>
                 <Link className="btn btn-neu" to="/">
                   Back to Home
@@ -347,10 +343,11 @@ export default function GetStarted() {
   return (
     <section className="page-enter">
       <Helmet>
-        <title>Get your free growth audit — ATLABTS</title>
+        <title>Get your free growth audit — AtLa/BTS</title>
+        <meta property="og:title" content="Get your free growth audit — AtLa/BTS" />
         <meta
           name="description"
-          content="Complete a 2-minute business profile to receive your free ATLABTS 360° digital, website, AI-search and automation mini audit."
+          content="Complete a 2-minute business profile to receive your free AtLa/BTS 360° digital, website, AI-search and automation mini audit."
         />
       </Helmet>
 
@@ -423,9 +420,7 @@ export default function GetStarted() {
                     />
                   </div>
                   <div className={`field ${fieldErrors.phone ? 'is-error' : ''}`}>
-                    <label htmlFor="gs-phone">
-                      Phone <span className="req" aria-hidden="true">*</span>
-                    </label>
+                    <label htmlFor="gs-phone">Phone (optional)</label>
                     <PhoneInput
                       id="gs-phone"
                       value={form.phone}
@@ -453,40 +448,12 @@ export default function GetStarted() {
                   </div>
                 </div>
 
-                <label className="check">
-                  <input
-                    type="checkbox"
-                    checked={form.sameWhatsapp}
-                    onChange={(e) => update('sameWhatsapp', e.target.checked)}
-                  />
-                  <span>WhatsApp is the same number</span>
-                </label>
-
-                {!form.sameWhatsapp && (
-                  <div className={`field ${fieldErrors.whatsapp ? 'is-error' : ''}`}>
-                    <label htmlFor="gs-wa">
-                      WhatsApp number <span className="req" aria-hidden="true">*</span>
-                    </label>
-                    <PhoneInput
-                      id="gs-wa"
-                      value={form.whatsapp}
-                      hasError={Boolean(fieldErrors.whatsapp)}
-                      onChange={(val) => update('whatsapp', val)}
-                      placeholder="98765 43210"
-                    />
-                    {fieldErrors.whatsapp && (
-                      <span className="field-err">{fieldErrors.whatsapp}</span>
-                    )}
-                  </div>
-                )}
-
                 <div className="field">
                   <label>Preferred contact</label>
                   <div className="wiz-chips">
                     {[
-                      ['whatsapp', 'WhatsApp'],
-                      ['call', 'Call'],
                       ['email', 'Email'],
+                      ['call', 'Phone call'],
                     ].map(([val, label]) => (
                       <button
                         key={val}
@@ -499,15 +466,6 @@ export default function GetStarted() {
                     ))}
                   </div>
                 </div>
-
-                <label className="check">
-                  <input
-                    type="checkbox"
-                    checked={form.whatsapp_opt_in}
-                    onChange={(e) => update('whatsapp_opt_in', e.target.checked)}
-                  />
-                  <span>Send me audit updates on WhatsApp</span>
-                </label>
               </div>
             )}
 
@@ -1090,7 +1048,7 @@ export default function GetStarted() {
                       onChange={(e) => update('consent', e.target.checked)}
                     />
                     <span>
-                      I agree to be contacted by ATLABTS about my enquiry.{' '}
+                      I agree to be contacted by AtLa/BTS about my enquiry.{' '}
                       <span className="req" aria-hidden="true">*</span>
                     </span>
                   </label>
@@ -1114,8 +1072,8 @@ export default function GetStarted() {
                     </div>
                     <p>
                       {form.full_name}
-                      {form.designation ? ` (${form.designation})` : ''} ·{' '}
-                      {formatPhoneForSubmit(form.phone)}
+                      {form.designation ? ` (${form.designation})` : ''}
+                      {form.phone.trim() ? ` · ${formatPhoneForSubmit(form.phone)}` : ''}
                       {form.email ? ` · ${form.email}` : ''} · Preferred: {form.preferred_channel}
                     </p>
                   </div>

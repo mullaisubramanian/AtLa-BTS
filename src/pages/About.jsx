@@ -69,22 +69,23 @@ export default function About() {
   return (
     <section className="page-enter">
       <Helmet>
-        <title>About ATLABTS — ATLA Business Transformation System</title>
+        <title>About AtLa/BTS — Business Transformation System</title>
+        <meta property="og:title" content="About AtLa/BTS — Business Transformation System" />
         <meta
           name="description"
-          content="Learn how ATLABTS replaces luck with a repeatable, measurable 6-layer Business Transformation System for startups, SMEs, enterprises and institutions."
+          content="Learn how AtLa/BTS replaces luck with a repeatable, measurable 6-layer Business Transformation System for startups, SMEs, enterprises and institutions."
         />
       </Helmet>
 
       <div className="section">
         <div className="wrap about-hero">
           <div>
-            <Eyebrow>About ATLABTS</Eyebrow>
+            <Eyebrow>About AtLa/BTS</Eyebrow>
             <h1 style={{ fontSize: 'clamp(2.2rem,5vw,3.6rem)', margin: '18px 0' }}>
               We turn businesses into <span className="grad">future-ready brands.</span>
             </h1>
             <p style={{ color: 'var(--muted)', fontSize: '1.05rem', marginBottom: '24px' }}>
-              ATLABTS (ATLA Business Transformation System) is a growth and transformation partner
+              AtLa/BTS is a growth and transformation partner
               for startups, growing SMEs, established enterprises, institutions and leaders. We
               combine strategy, creativity, software engineering and AI so the businesses we work
               with can compete with, and beat, brands ten times their size.
@@ -166,7 +167,7 @@ export default function About() {
             </h2>
             <p>
               Growth that depends on one viral post, one star salesperson or one founder working
-              16-hour days isn&apos;t growth. It&apos;s luck. We named ATLABTS the{' '}
+              16-hour days isn&apos;t growth. It&apos;s luck. We named AtLa/BTS the{' '}
               <b>
                 Business Transformation <u>System</u>
               </b>{' '}

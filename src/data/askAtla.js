@@ -137,7 +137,7 @@ export const PAGES = {
   },
   about: {
     key: 'about',
-    title: 'About ATLABTS',
+    title: 'About AtLa/BTS',
     icon: 'eye',
     desc: 'The Business Transformation System',
     path: '/about',
@@ -153,10 +153,10 @@ export const PAGES = {
   negotiate: {
     key: 'negotiate',
     title: "Let's negotiate",
-    icon: 'briefcase',
-    desc: 'Get a price that fits you',
+    icon: 'instagram',
+    desc: 'DM us on Instagram (@atla_bts)',
     path: '/contact',
-    isContact: true,
+    isInstagram: true,
   },
 };
 

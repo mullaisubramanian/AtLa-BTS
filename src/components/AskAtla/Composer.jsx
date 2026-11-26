@@ -46,7 +46,7 @@ export default function Composer() {
     <div className="composer glass">
       <div className="comp-top">
         <Logo className="comp-logo" />
-        <b>ATLA AI</b>
+        <b>AtLa/BTS AI</b>
         <span className="comp-tag">Business growth assistant</span>
       </div>
       <form
@@ -62,10 +62,10 @@ export default function Composer() {
           value={value}
           onChange={handleInput}
           onKeyDown={handleKeyDown}
-          aria-label="Ask ATLA AI"
+          aria-label="Ask AtLa/BTS AI"
           placeholder={
             isNarrow
-              ? 'Ask ATLA anything…'
+              ? 'Ask AtLa/BTS anything…'
               : 'Ask anything… e.g. How do I get more leads for my business?'
           }
         />

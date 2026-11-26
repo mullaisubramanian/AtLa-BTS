@@ -103,7 +103,7 @@ export default function AdminLayout() {
     return (
       <div className="adm-login-wrap">
         <Helmet>
-          <title>Admin — ATLABTS</title>
+          <title>Admin — AtLa/BTS</title>
           <meta name="robots" content="noindex,nofollow" />
         </Helmet>
         <p style={{ color: 'var(--muted)' }}>Verifying staff session…</p>
@@ -117,7 +117,7 @@ export default function AdminLayout() {
   return (
     <div className="adm-shell">
       <Helmet>
-        <title>Admin Dashboard — ATLABTS</title>
+        <title>Admin Dashboard — AtLa/BTS</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
 
@@ -125,7 +125,7 @@ export default function AdminLayout() {
         <div className="brand">
           <Logo />
           <div className="brand-txt">
-            <b>ATLABTS</b>
+            <b>AtLa/BTS</b>
             <span>Admin Console</span>
           </div>
         </div>

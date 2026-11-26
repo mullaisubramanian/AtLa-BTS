@@ -68,7 +68,7 @@ export default function AdminLogin() {
   return (
     <div className="adm-login-wrap">
       <Helmet>
-        <title>Admin Login — ATLABTS</title>
+        <title>Admin Login — AtLa/BTS</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
 
@@ -76,7 +76,7 @@ export default function AdminLogin() {
         <div className="adm-login-brand">
           <Logo />
           <div>
-            <b>ATLABTS Admin</b>
+            <b>AtLa/BTS Admin</b>
             <span>Private Growth &amp; CRM Console</span>
           </div>
         </div>

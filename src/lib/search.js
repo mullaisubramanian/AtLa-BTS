@@ -51,7 +51,7 @@ export function compose(q, catalogue = {}) {
       matchedServices: [],
       p: [
         [
-          "Vanakkam! I'm ATLA AI. Tell me about your business and what you'd like to improve, for example more leads, an online store, automation or a stronger brand, and I'll show you the right services.",
+          "Vanakkam! I'm AtLa/BTS AI. Tell me about your business and what you'd like to improve, for example more leads, an online store, automation or a stronger brand, and I'll show you the right services.",
         ],
       ],
       pages: ['services', 'cocktail', 'packages', 'contact'],
@@ -65,9 +65,9 @@ export function compose(q, catalogue = {}) {
       matchedServices: [],
       p: [
         [
-          b('ATLABTS'),
+          b('AtLa/BTS'),
           ' is the ',
-          b('ATLA Business Transformation System'),
+          b('Business Transformation System'),
           ': one partner for growth, brand, websites, AI and technology.',
         ],
         [
@@ -124,12 +124,14 @@ export function compose(q, catalogue = {}) {
       matchedServices: [],
       p: [
         [
-          'Happy to connect you with a strategist. Share your details on the ',
+          'Happy to connect you with a strategist. DM us on Instagram (',
+          b('@atla_bts'),
+          ') or share your details on the ',
           b('Talk to us'),
-          ' page. We reply within one business day, and your first call includes a free mini audit.',
+          ' page. We reply within one business day.',
         ],
       ],
-      pages: ['contact', 'packages'],
+      pages: ['contact', 'negotiate', 'packages'],
     };
   }
 
