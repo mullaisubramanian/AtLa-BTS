@@ -44,47 +44,13 @@
   gap: 16px;
 }
 
-.form .two {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.field label {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--deep);
-  display: block;
-  margin-bottom: 7px;
-}
-
-.field input,
-.field select,
-.field textarea {
-  width: 100%;
-  padding: 14px 16px;
-  border: none;
-  border-radius: 14px;
-  background: var(--bg);
-  box-shadow: var(--neu-in);
-  font-family: inherit;
-  font-size: 0.92rem;
-  color: var(--ink);
-  outline: none;
-}
-
-.field textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
 .interest {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.interest label {
+.field .interest label {
   font-size: 0.78rem;
   font-weight: 600;
   padding: 8px 13px;
@@ -96,23 +62,17 @@
   color: var(--ink);
 }
 
-.interest input {
+.field .interest input {
   display: none;
 }
 
-.interest label:has(input:checked) {
+.field .interest label:has(input:checked) {
   box-shadow: var(--neu-in);
   color: var(--deep);
 }
 
 @media (max-width: 960px) {
   .contact-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 600px) {
-  .form .two {
     grid-template-columns: 1fr;
   }
 }

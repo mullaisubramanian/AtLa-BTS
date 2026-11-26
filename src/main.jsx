@@ -13,6 +13,7 @@ import '@fontsource/plus-jakarta-sans/600.css';
 import '@fontsource/plus-jakarta-sans/700.css';
 
 import './styles/tokens.css';
+import './styles/forms.css';
 import { CatalogueProvider } from './context/CatalogueContext';
 import { ModalProvider } from './context/ModalContext';
 import { ContactPrefillProvider } from './context/ContactPrefillContext';

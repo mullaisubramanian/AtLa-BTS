@@ -12,23 +12,14 @@ import {
   budgetForAmount,
 } from '../data/options';
 import Icon from './Icon';
+import { PhoneInput, SelectBox } from './FormFields';
+import { formatPhoneForSubmit, isValidTenDigitPhone, validatePhoneInput } from '../lib/phone';
 import './QuickEnquiryModal.css';
 
-function validatePhone(raw) {
-  const cleaned = raw.trim();
-  if (!/^[0-9+ ()-]{8,20}$/.test(cleaned)) {
-    return 'Valid phone is required';
-  }
-  const digits = cleaned.replace(/\D/g, '');
-  if (cleaned.startsWith('+91') || (!cleaned.startsWith('+') && digits.length === 10)) {
-    const ten = digits.slice(-10);
-    if (!/^[6-9]\d{9}$/.test(ten)) {
-      return 'Enter a valid 10-digit Indian mobile number or international number with +';
-    }
-  } else if (digits.length < 8) {
-    return 'Valid phone is required';
-  }
-  return '';
+function validateEmail(raw) {
+  const cleaned = String(raw || '').trim();
+  if (!cleaned) return '';
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleaned) ? '' : 'Enter a valid email address';
 }
 
 export default function QuickEnquiryModal() {
@@ -37,7 +28,7 @@ export default function QuickEnquiryModal() {
   const trapRef = useFocusTrap(open, closeQuickEnquiry);
 
   const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('+91 ');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [stage, setStage] = useState('growing_sme');
@@ -54,7 +45,7 @@ export default function QuickEnquiryModal() {
   useEffect(() => {
     if (!open) return;
     setFullName('');
-    setPhone('+91 ');
+    setPhone('');
     setEmail('');
     setCompanyName('');
     setStage('growing_sme');
@@ -65,10 +56,13 @@ export default function QuickEnquiryModal() {
     setWhatsappOptIn(true);
     setConsent(false);
     setHoneypot('');
+    setFieldErrors({});
     setErrorMsg('');
     setSubmitting(false);
     setSubmittedLeadId(null);
   }, [open, quickEnquiry]);
+
+  const [fieldErrors, setFieldErrors] = useState({});
 
   if (!open) return null;
 
@@ -79,6 +73,25 @@ export default function QuickEnquiryModal() {
       ? 'Serve it to me'
       : 'Send enquiry';
 
+  const isServeMode = quickEnquiry.source === 'cocktail_serve';
+  const isServeReady =
+    Boolean(fullName.trim()) && isValidTenDigitPhone(phone) && Boolean(consent);
+
+  const validateSingleField = (field, value) => {
+    let msg = '';
+    if (field === 'fullName') {
+      msg = String(value || '').trim() ? '' : 'Name is required';
+    } else if (field === 'phone') {
+      msg = validatePhoneInput(value);
+    } else if (field === 'email') {
+      msg = validateEmail(value);
+    } else if (field === 'consent') {
+      msg = value ? '' : 'Please agree to be contacted by ATLABTS about your enquiry.';
+    }
+    setFieldErrors((prev) => ({ ...prev, [field]: msg }));
+    return msg;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -88,28 +101,25 @@ export default function QuickEnquiryModal() {
       return;
     }
 
-    if (!fullName.trim()) {
-      setErrorMsg('Name is required');
+    const nextErrors = {
+      fullName: fullName.trim() ? '' : 'Name is required',
+      phone: validatePhoneInput(phone),
+      email: validateEmail(email),
+      consent: consent ? '' : 'Please agree to be contacted by ATLABTS about your enquiry.',
+    };
+    setFieldErrors(nextErrors);
+
+    if (Object.values(nextErrors).some(Boolean)) {
       return;
     }
 
-    const phoneErr = validatePhone(phone);
-    if (phoneErr) {
-      setErrorMsg(phoneErr);
-      return;
-    }
-
-    if (!consent) {
-      setErrorMsg('Please agree to be contacted by ATLABTS about your enquiry.');
-      return;
-    }
-
+    const formattedPhone = formatPhoneForSubmit(phone);
     setSubmitting(true);
     const { data, error } = await submitLead({
       contact: {
         full_name: fullName,
-        phone,
-        whatsapp: phone,
+        phone: formattedPhone,
+        whatsapp: formattedPhone,
         email,
         preferred_channel: 'whatsapp',
         whatsapp_opt_in: whatsappOptIn,
@@ -273,55 +283,84 @@ export default function QuickEnquiryModal() {
                   aria-hidden="true"
                 />
 
-                <div className="qe-two">
-                  <div className="field">
-                    <label htmlFor="qe-name">Full name *</label>
+                <div className="form-grid">
+                  <div className={`field ${fieldErrors.fullName ? 'is-error' : ''}`}>
+                    <label htmlFor="qe-name">
+                      Full name <span className="req" aria-hidden="true">*</span>
+                    </label>
                     <input
                       id="qe-name"
+                      className="input"
                       required
                       value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setFullName(val);
+                        if (fieldErrors.fullName) validateSingleField('fullName', val);
+                      }}
+                      onBlur={(e) => validateSingleField('fullName', e.target.value)}
                       placeholder="Your full name"
                     />
+                    {fieldErrors.fullName && (
+                      <span className="field-err">{fieldErrors.fullName}</span>
+                    )}
                   </div>
-                  <div className="field">
-                    <label htmlFor="qe-phone">Phone / WhatsApp *</label>
-                    <input
+
+                  <div className={`field ${fieldErrors.phone ? 'is-error' : ''}`}>
+                    <label htmlFor="qe-phone">
+                      Phone / WhatsApp <span className="req" aria-hidden="true">*</span>
+                    </label>
+                    <PhoneInput
                       id="qe-phone"
                       required
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="+91 98765 43210"
+                      hasError={Boolean(fieldErrors.phone)}
+                      onChange={(val) => {
+                        setPhone(val);
+                        if (fieldErrors.phone) validateSingleField('phone', val);
+                      }}
+                      onBlur={(e) => validateSingleField('phone', e.target.value)}
+                      placeholder="98765 43210"
                     />
+                    {fieldErrors.phone && (
+                      <span className="field-err">{fieldErrors.phone}</span>
+                    )}
                   </div>
-                </div>
 
-                <div className="qe-two">
-                  <div className="field">
+                  <div className={`field ${fieldErrors.email ? 'is-error' : ''}`}>
                     <label htmlFor="qe-email">Email</label>
                     <input
                       id="qe-email"
                       type="email"
+                      className="input"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setEmail(val);
+                        if (fieldErrors.email) validateSingleField('email', val);
+                      }}
+                      onBlur={(e) => validateSingleField('email', e.target.value)}
                       placeholder="you@company.com"
                     />
+                    {fieldErrors.email && (
+                      <span className="field-err">{fieldErrors.email}</span>
+                    )}
                   </div>
+
                   <div className="field">
                     <label htmlFor="qe-company">Company name</label>
                     <input
                       id="qe-company"
+                      className="input"
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
                       placeholder="Business / brand name"
                     />
                   </div>
-                </div>
 
-                <div className="qe-two">
                   <div className="field">
                     <label htmlFor="qe-stage">Business stage</label>
-                    <select
+                    <SelectBox
                       id="qe-stage"
                       value={stage}
                       onChange={(e) => setStage(e.target.value)}
@@ -331,11 +370,12 @@ export default function QuickEnquiryModal() {
                           {s.label}
                         </option>
                       ))}
-                    </select>
+                    </SelectBox>
                   </div>
+
                   <div className="field">
                     <label htmlFor="qe-budget">Monthly budget</label>
-                    <select
+                    <SelectBox
                       id="qe-budget"
                       value={budget}
                       onChange={(e) => setBudget(e.target.value)}
@@ -345,38 +385,39 @@ export default function QuickEnquiryModal() {
                           {b.label}
                         </option>
                       ))}
-                    </select>
+                    </SelectBox>
+                  </div>
+
+                  {quickEnquiry.source === 'academy' && (
+                    <div className="field field-full">
+                      <label htmlFor="qe-academy">Which programme?</label>
+                      <SelectBox
+                        id="qe-academy"
+                        value={academyTrack}
+                        onChange={(e) => setAcademyTrack(e.target.value)}
+                      >
+                        {ACADEMY_TRACKS.map((t) => (
+                          <option key={t} value={t}>
+                            {t}
+                          </option>
+                        ))}
+                      </SelectBox>
+                    </div>
+                  )}
+
+                  <div className="field field-full">
+                    <label htmlFor="qe-msg">Message</label>
+                    <textarea
+                      id="qe-msg"
+                      className="textarea"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder="Share your goals or questions…"
+                    />
                   </div>
                 </div>
 
-                {quickEnquiry.source === 'academy' && (
-                  <div className="field">
-                    <label htmlFor="qe-academy">Which programme?</label>
-                    <select
-                      id="qe-academy"
-                      value={academyTrack}
-                      onChange={(e) => setAcademyTrack(e.target.value)}
-                    >
-                      {ACADEMY_TRACKS.map((t) => (
-                        <option key={t} value={t}>
-                          {t}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-
-                <div className="field">
-                  <label htmlFor="qe-msg">Message</label>
-                  <textarea
-                    id="qe-msg"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Share your goals or questions…"
-                  />
-                </div>
-
-                <label className="qe-check-row">
+                <label className="check">
                   <input
                     type="checkbox"
                     checked={whatsappOptIn}
@@ -385,14 +426,26 @@ export default function QuickEnquiryModal() {
                   <span>Send me updates on WhatsApp</span>
                 </label>
 
-                <label className="qe-check-row">
-                  <input
-                    type="checkbox"
-                    checked={consent}
-                    onChange={(e) => setConsent(e.target.checked)}
-                  />
-                  <span>I agree to be contacted by ATLABTS about my enquiry. *</span>
-                </label>
+                <div className="field">
+                  <label className={`check ${fieldErrors.consent ? 'is-error' : ''}`}>
+                    <input
+                      type="checkbox"
+                      checked={consent}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        setConsent(checked);
+                        if (fieldErrors.consent) validateSingleField('consent', checked);
+                      }}
+                    />
+                    <span>
+                      I agree to be contacted by ATLABTS about my enquiry.{' '}
+                      <span className="req" aria-hidden="true">*</span>
+                    </span>
+                  </label>
+                  {fieldErrors.consent && (
+                    <span className="field-err">{fieldErrors.consent}</span>
+                  )}
+                </div>
 
                 {errorMsg && (
                   <div className="qe-error" role="alert">
@@ -403,7 +456,7 @@ export default function QuickEnquiryModal() {
                 <button
                   type="submit"
                   className="btn btn-primary qe-submit"
-                  disabled={submitting}
+                  disabled={submitting || (isServeMode && !isServeReady)}
                 >
                   {submitting ? (
                     <>

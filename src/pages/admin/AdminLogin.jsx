@@ -83,10 +83,13 @@ export default function AdminLogin() {
 
         <form onSubmit={handleSubmit} className="adm-login-form">
           <div className="field">
-            <label htmlFor="adm-email">Work email</label>
+            <label htmlFor="adm-email">
+              Work email <span className="req" aria-hidden="true">*</span>
+            </label>
             <input
               id="adm-email"
               type="email"
+              className="input"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -94,10 +97,13 @@ export default function AdminLogin() {
             />
           </div>
           <div className="field">
-            <label htmlFor="adm-pass">Password</label>
+            <label htmlFor="adm-pass">
+              Password <span className="req" aria-hidden="true">*</span>
+            </label>
             <input
               id="adm-pass"
               type="password"
+              className="input"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}

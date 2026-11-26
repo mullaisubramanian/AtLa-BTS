@@ -10,12 +10,14 @@ import { useModals } from '../context/ModalContext';
 import { BUDGET_RANGES, BUSINESS_STAGES } from '../data/options';
 import Eyebrow from '../components/Eyebrow';
 import Icon from '../components/Icon';
+import { PhoneInput, SelectBox } from '../components/FormFields';
+import { formatPhoneForSubmit, validatePhoneInput } from '../lib/phone';
 import './Contact.css';
 
 const INITIAL_FORM = {
   name: '',
   company: '',
-  phone: '+91 ',
+  phone: '',
   email: '',
   stage: 'startup',
   budget: 'under_35k',
@@ -31,6 +33,7 @@ export default function Contact() {
   const { prefill, clearContactPrefill } = useContactPrefill();
   const { showToast } = useModals();
   const [form, setForm] = useState(INITIAL_FORM);
+  const [fieldErrors, setFieldErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -56,6 +59,24 @@ export default function Contact() {
     });
   };
 
+  const validateField = (key, value) => {
+    let msg = '';
+    if (key === 'name') {
+      msg = String(value || '').trim() ? '' : 'Name is required';
+    } else if (key === 'phone') {
+      msg = validatePhoneInput(value);
+    } else if (key === 'email') {
+      const cleaned = String(value || '').trim();
+      msg = !cleaned || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleaned)
+        ? ''
+        : 'Enter a valid email address';
+    } else if (key === 'consent') {
+      msg = value ? '' : 'Please agree to be contacted by ATLABTS about your enquiry.';
+    }
+    setFieldErrors((prev) => ({ ...prev, [key]: msg }));
+    return msg;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -63,32 +84,37 @@ export default function Contact() {
     if (form.honeypot.trim()) {
       showToast('Thank you! We will get back to you within one business day.');
       setForm(INITIAL_FORM);
+      setFieldErrors({});
       return;
     }
 
-    if (!form.name.trim()) {
-      setErrorMsg('Name is required');
+    const cleanedEmail = form.email.trim();
+    const nextErrors = {
+      name: form.name.trim() ? '' : 'Name is required',
+      phone: validatePhoneInput(form.phone),
+      email:
+        !cleanedEmail || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanedEmail)
+          ? ''
+          : 'Enter a valid email address',
+      consent: form.consent
+        ? ''
+        : 'Please agree to be contacted by ATLABTS about your enquiry.',
+    };
+    setFieldErrors(nextErrors);
+
+    if (Object.values(nextErrors).some(Boolean)) {
       return;
     }
 
-    if (!/^[0-9+ ()-]{8,20}$/.test(form.phone.trim())) {
-      setErrorMsg('Valid phone is required');
-      return;
-    }
-
-    if (!form.consent) {
-      setErrorMsg('Consent is required');
-      return;
-    }
-
+    const formattedPhone = formatPhoneForSubmit(form.phone);
     setSubmitting(true);
     const isCocktail = form.packageId === 'custom_cocktail';
     const isProject = form.packageId === 'project';
     const { data, error } = await submitLead({
       contact: {
         full_name: form.name,
-        phone: form.phone,
-        whatsapp: form.phone,
+        phone: formattedPhone,
+        whatsapp: formattedPhone,
         email: form.email,
         preferred_channel: 'whatsapp',
         whatsapp_opt_in: true,
@@ -244,59 +270,82 @@ export default function Contact() {
                 aria-hidden="true"
               />
 
-              <div className="two">
-                <div className="field">
-                  <label htmlFor="c-name">Your name *</label>
+              <div className="form-grid">
+                <div className={`field ${fieldErrors.name ? 'is-error' : ''}`}>
+                  <label htmlFor="c-name">
+                    Your name <span className="req" aria-hidden="true">*</span>
+                  </label>
                   <input
                     id="c-name"
+                    className="input"
                     required
                     name="name"
                     placeholder="Full name"
                     value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setForm({ ...form, name: val });
+                      if (fieldErrors.name) validateField('name', val);
+                    }}
+                    onBlur={(e) => validateField('name', e.target.value)}
                   />
+                  {fieldErrors.name && <span className="field-err">{fieldErrors.name}</span>}
                 </div>
+
                 <div className="field">
                   <label htmlFor="c-company">Company / Brand</label>
                   <input
                     id="c-company"
+                    className="input"
                     name="company"
                     placeholder="Business name"
                     value={form.company}
                     onChange={(e) => setForm({ ...form, company: e.target.value })}
                   />
                 </div>
-              </div>
 
-              <div className="two">
-                <div className="field">
-                  <label htmlFor="c-phone">Phone / WhatsApp *</label>
-                  <input
+                <div className={`field ${fieldErrors.phone ? 'is-error' : ''}`}>
+                  <label htmlFor="c-phone">
+                    Phone / WhatsApp <span className="req" aria-hidden="true">*</span>
+                  </label>
+                  <PhoneInput
                     id="c-phone"
                     required
                     name="phone"
-                    placeholder="+91"
                     value={form.phone}
-                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                    hasError={Boolean(fieldErrors.phone)}
+                    onChange={(val) => {
+                      setForm({ ...form, phone: val });
+                      if (fieldErrors.phone) validateField('phone', val);
+                    }}
+                    onBlur={(e) => validateField('phone', e.target.value)}
+                    placeholder="98765 43210"
                   />
+                  {fieldErrors.phone && <span className="field-err">{fieldErrors.phone}</span>}
                 </div>
-                <div className="field">
+
+                <div className={`field ${fieldErrors.email ? 'is-error' : ''}`}>
                   <label htmlFor="c-email">Email</label>
                   <input
                     id="c-email"
                     type="email"
+                    className="input"
                     name="email"
                     placeholder="you@company.com"
                     value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setForm({ ...form, email: val });
+                      if (fieldErrors.email) validateField('email', val);
+                    }}
+                    onBlur={(e) => validateField('email', e.target.value)}
                   />
+                  {fieldErrors.email && <span className="field-err">{fieldErrors.email}</span>}
                 </div>
-              </div>
 
-              <div className="two">
                 <div className="field">
                   <label htmlFor="c-stage">Business stage</label>
-                  <select
+                  <SelectBox
                     id="c-stage"
                     name="stage"
                     value={form.stage}
@@ -307,11 +356,12 @@ export default function Contact() {
                         {s.label}
                       </option>
                     ))}
-                  </select>
+                  </SelectBox>
                 </div>
+
                 <div className="field">
                   <label htmlFor="c-budget">Monthly budget</label>
-                  <select
+                  <SelectBox
                     id="c-budget"
                     name="budget"
                     value={form.budget}
@@ -322,67 +372,77 @@ export default function Contact() {
                         {b.label}
                       </option>
                     ))}
-                  </select>
+                  </SelectBox>
+                </div>
+
+                <div className="field field-full">
+                  <label>I&apos;m interested in</label>
+                  <div className="interest">
+                    {practices.map((p) => (
+                      <label key={p.id}>
+                        <input
+                          type="checkbox"
+                          name="interest"
+                          value={p.id}
+                          checked={form.interests.includes(p.id)}
+                          onChange={() => toggleInterest(p.id)}
+                        />
+                        <span>{p.title}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="field field-full">
+                  <label htmlFor="c-pkg">Package</label>
+                  <SelectBox
+                    id="c-pkg"
+                    name="package"
+                    value={form.packageId}
+                    onChange={(e) => setForm({ ...form, packageId: e.target.value })}
+                  >
+                    <option value="">Not sure yet, advise me</option>
+                    {packages.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name} · {fmt(p.price)}/month
+                      </option>
+                    ))}
+                    <option value="custom_cocktail">Custom Service Cocktail</option>
+                    <option value="project">One-time project (ERP / CRM / SaaS / website)</option>
+                  </SelectBox>
+                </div>
+
+                <div className="field field-full">
+                  <label htmlFor="c-msg">Tell us about your goals</label>
+                  <textarea
+                    id="c-msg"
+                    className="textarea"
+                    name="msg"
+                    placeholder="Where is your business today, and where do you want it in 12 months?"
+                    value={form.msg}
+                    onChange={(e) => setForm({ ...form, msg: e.target.value })}
+                  />
                 </div>
               </div>
 
               <div className="field">
-                <label>I&apos;m interested in</label>
-                <div className="interest">
-                  {practices.map((p) => (
-                    <label key={p.id}>
-                      <input
-                        type="checkbox"
-                        name="interest"
-                        value={p.id}
-                        checked={form.interests.includes(p.id)}
-                        onChange={() => toggleInterest(p.id)}
-                      />
-                      <span>{p.title}</span>
-                    </label>
-                  ))}
-                </div>
+                <label className={`check ${fieldErrors.consent ? 'is-error' : ''}`}>
+                  <input
+                    type="checkbox"
+                    checked={form.consent}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setForm({ ...form, consent: checked });
+                      if (fieldErrors.consent) validateField('consent', checked);
+                    }}
+                  />
+                  <span>
+                    I agree to be contacted by ATLABTS about my enquiry.{' '}
+                    <span className="req" aria-hidden="true">*</span>
+                  </span>
+                </label>
+                {fieldErrors.consent && <span className="field-err">{fieldErrors.consent}</span>}
               </div>
-
-              <div className="field">
-                <label htmlFor="c-pkg">Package</label>
-                <select
-                  id="c-pkg"
-                  name="package"
-                  value={form.packageId}
-                  onChange={(e) => setForm({ ...form, packageId: e.target.value })}
-                >
-                  <option value="">Not sure yet, advise me</option>
-                  {packages.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name} · {fmt(p.price)}/month
-                    </option>
-                  ))}
-                  <option value="custom_cocktail">Custom Service Cocktail</option>
-                  <option value="project">One-time project (ERP / CRM / SaaS / website)</option>
-                </select>
-              </div>
-
-              <div className="field">
-                <label htmlFor="c-msg">Tell us about your goals</label>
-                <textarea
-                  id="c-msg"
-                  name="msg"
-                  placeholder="Where is your business today, and where do you want it in 12 months?"
-                  value={form.msg}
-                  onChange={(e) => setForm({ ...form, msg: e.target.value })}
-                />
-              </div>
-
-              <label style={{ display: 'flex', gap: '10px', alignItems: 'center', fontSize: '0.84rem' }}>
-                <input
-                  type="checkbox"
-                  checked={form.consent}
-                  onChange={(e) => setForm({ ...form, consent: e.target.checked })}
-                  style={{ accentColor: 'var(--tq)', width: '16px', height: '16px' }}
-                />
-                <span>I agree to be contacted by ATLABTS about my enquiry. *</span>
-              </label>
 
               {errorMsg && (
                 <div

@@ -83,16 +83,10 @@
   margin-bottom: 4px;
 }
 
-.wiz-two {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
 .wiz-three {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
+  gap: 16px 20px;
 }
 
 .wiz-chips {
@@ -191,14 +185,13 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 639px) {
   .wiz-card {
     padding: 20px 16px;
   }
   .wiz-progress {
     grid-template-columns: repeat(2, 1fr);
   }
-  .wiz-two,
   .wiz-three {
     grid-template-columns: 1fr;
   }

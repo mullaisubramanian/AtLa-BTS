@@ -23,6 +23,12 @@ import {
 } from '../data/options';
 import Eyebrow from '../components/Eyebrow';
 import Icon from '../components/Icon';
+import { PhoneInput, SelectBox } from '../components/FormFields';
+import {
+  formatPhoneForSubmit,
+  stripDefaultIndiaCode,
+  validatePhoneInput,
+} from '../lib/phone';
 import './GetStarted.css';
 
 const DRAFT_KEY = 'atlabts_get_started_draft_v1';
@@ -31,9 +37,9 @@ const INITIAL_DATA = {
   // Step 1: About you
   full_name: '',
   designation: '',
-  phone: '+91 ',
+  phone: '',
   sameWhatsapp: true,
-  whatsapp: '+91 ',
+  whatsapp: '',
   email: '',
   preferred_channel: 'whatsapp',
   whatsapp_opt_in: true,
@@ -111,7 +117,12 @@ export default function GetStarted() {
 
   const [initial] = useState(loadDraft);
   const [step, setStep] = useState(initial.step);
-  const [form, setForm] = useState(initial.form);
+  const [form, setForm] = useState(() => ({
+    ...initial.form,
+    phone: stripDefaultIndiaCode(initial.form.phone),
+    whatsapp: stripDefaultIndiaCode(initial.form.whatsapp),
+  }));
+  const [fieldErrors, setFieldErrors] = useState({});
   const [stepError, setStepError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submittedLeadId, setSubmittedLeadId] = useState(null);
@@ -127,6 +138,7 @@ export default function GetStarted() {
 
   const update = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
+    setFieldErrors((prev) => (prev[key] ? { ...prev, [key]: '' } : prev));
     setStepError('');
   };
 
@@ -145,37 +157,44 @@ export default function GetStarted() {
     });
   };
 
-  const validateStep = (s) => {
+  const collectStepErrors = (s) => {
+    const errors = {};
     if (s === 0) {
-      if (!form.full_name.trim()) return 'Full name is required.';
-      if (!/^[0-9+ ()-]{8,20}$/.test(form.phone.trim())) {
-        return 'Valid phone is required.';
+      if (!form.full_name.trim()) errors.full_name = 'Full name is required.';
+      const phoneErr = validatePhoneInput(form.phone);
+      if (phoneErr) errors.phone = phoneErr;
+      if (!form.sameWhatsapp) {
+        const waErr = validatePhoneInput(form.whatsapp);
+        if (waErr) errors.whatsapp = waErr;
       }
-      if (!form.sameWhatsapp && !/^[0-9+ ()-]{8,20}$/.test(form.whatsapp.trim())) {
-        return 'Please enter a valid WhatsApp number.';
+      const cleanedEmail = form.email.trim();
+      if (cleanedEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanedEmail)) {
+        errors.email = 'Enter a valid email address.';
       }
     }
     if (s === 1) {
-      if (!form.company_name.trim()) return 'Company name is required.';
-      if (!form.industry) return 'Please select your industry.';
-      if (!form.business_stage) return 'Please select your business stage.';
+      if (!form.company_name.trim()) errors.company_name = 'Company name is required.';
+      if (!form.industry) errors.industry = 'Please select your industry.';
+      if (!form.business_stage) errors.business_stage = 'Please select your business stage.';
     }
     if (s === 4) {
-      if (!form.budget) return 'Please select your monthly budget.';
-      if (!form.decision_timeline) return 'Please select your decision timeline.';
+      if (!form.budget) errors.budget = 'Please select your monthly budget.';
+      if (!form.decision_timeline) errors.decision_timeline = 'Please select your decision timeline.';
       if (!form.consent) {
-        return 'Please agree to be contacted by ATLABTS about your enquiry.';
+        errors.consent = 'Please agree to be contacted by ATLABTS about your enquiry.';
       }
     }
-    return '';
+    return errors;
   };
 
   const handleNext = () => {
-    const err = validateStep(step);
-    if (err) {
-      setStepError(err);
+    const errors = collectStepErrors(step);
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setStepError(Object.values(errors)[0]);
       return;
     }
+    setFieldErrors({});
     setStepError('');
     const next = Math.min(5, step + 1);
     setStep(next);
@@ -184,19 +203,22 @@ export default function GetStarted() {
   };
 
   const handleBack = () => {
+    setFieldErrors({});
     setStepError('');
     setStep((prev) => Math.max(0, prev - 1));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSubmit = async () => {
-    const err = validateStep(4);
-    if (err) {
-      setStepError(err);
+    const errors = collectStepErrors(4);
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setStepError(Object.values(errors)[0]);
       setStep(4);
       return;
     }
     setSubmitting(true);
+    setFieldErrors({});
     setStepError('');
 
     const isCocktail = form.package_id === 'custom_cocktail';
@@ -204,12 +226,17 @@ export default function GetStarted() {
       ? `Profile completed for enquiry ${refParam}`
       : form.extra_notes.trim() || 'Completed 5-step Get Started growth audit profile.';
 
+    const formattedPhone = formatPhoneForSubmit(form.phone);
+    const formattedWhatsapp = form.sameWhatsapp
+      ? formattedPhone
+      : formatPhoneForSubmit(form.whatsapp);
+
     const { data, error } = await submitLead({
       contact: {
         full_name: form.full_name,
         designation: form.designation,
-        phone: form.phone,
-        whatsapp: form.sameWhatsapp ? form.phone : form.whatsapp,
+        phone: formattedPhone,
+        whatsapp: formattedWhatsapp,
         email: form.email,
         preferred_channel: form.preferred_channel,
         whatsapp_opt_in: form.whatsapp_opt_in,
@@ -369,50 +396,64 @@ export default function GetStarted() {
             {step === 0 && (
               <div className="wiz-panel">
                 <h3>Step 1 · About you</h3>
-                <div className="wiz-two">
-                  <div className="field">
-                    <label htmlFor="gs-name">Full name *</label>
+                <div className="form-grid">
+                  <div className={`field ${fieldErrors.full_name ? 'is-error' : ''}`}>
+                    <label htmlFor="gs-name">
+                      Full name <span className="req" aria-hidden="true">*</span>
+                    </label>
                     <input
                       id="gs-name"
+                      className="input"
                       value={form.full_name}
                       onChange={(e) => update('full_name', e.target.value)}
                       placeholder="Your full name"
                     />
+                    {fieldErrors.full_name && (
+                      <span className="field-err">{fieldErrors.full_name}</span>
+                    )}
                   </div>
                   <div className="field">
                     <label htmlFor="gs-role">Designation</label>
                     <input
                       id="gs-role"
+                      className="input"
                       value={form.designation}
                       onChange={(e) => update('designation', e.target.value)}
                       placeholder="Founder, Director, Marketing Head…"
                     />
                   </div>
-                </div>
-
-                <div className="wiz-two">
-                  <div className="field">
-                    <label htmlFor="gs-phone">Phone *</label>
-                    <input
+                  <div className={`field ${fieldErrors.phone ? 'is-error' : ''}`}>
+                    <label htmlFor="gs-phone">
+                      Phone <span className="req" aria-hidden="true">*</span>
+                    </label>
+                    <PhoneInput
                       id="gs-phone"
                       value={form.phone}
-                      onChange={(e) => update('phone', e.target.value)}
-                      placeholder="+91 98765 43210"
+                      hasError={Boolean(fieldErrors.phone)}
+                      onChange={(val) => update('phone', val)}
+                      placeholder="98765 43210"
                     />
+                    {fieldErrors.phone && (
+                      <span className="field-err">{fieldErrors.phone}</span>
+                    )}
                   </div>
-                  <div className="field">
+                  <div className={`field ${fieldErrors.email ? 'is-error' : ''}`}>
                     <label htmlFor="gs-email">Email</label>
                     <input
                       id="gs-email"
                       type="email"
+                      className="input"
                       value={form.email}
                       onChange={(e) => update('email', e.target.value)}
                       placeholder="you@company.com"
                     />
+                    {fieldErrors.email && (
+                      <span className="field-err">{fieldErrors.email}</span>
+                    )}
                   </div>
                 </div>
 
-                <label className="qe-check-row">
+                <label className="check">
                   <input
                     type="checkbox"
                     checked={form.sameWhatsapp}
@@ -422,14 +463,20 @@ export default function GetStarted() {
                 </label>
 
                 {!form.sameWhatsapp && (
-                  <div className="field">
-                    <label htmlFor="gs-wa">WhatsApp number *</label>
-                    <input
+                  <div className={`field ${fieldErrors.whatsapp ? 'is-error' : ''}`}>
+                    <label htmlFor="gs-wa">
+                      WhatsApp number <span className="req" aria-hidden="true">*</span>
+                    </label>
+                    <PhoneInput
                       id="gs-wa"
                       value={form.whatsapp}
-                      onChange={(e) => update('whatsapp', e.target.value)}
-                      placeholder="+91"
+                      hasError={Boolean(fieldErrors.whatsapp)}
+                      onChange={(val) => update('whatsapp', val)}
+                      placeholder="98765 43210"
                     />
+                    {fieldErrors.whatsapp && (
+                      <span className="field-err">{fieldErrors.whatsapp}</span>
+                    )}
                   </div>
                 )}
 
@@ -453,7 +500,7 @@ export default function GetStarted() {
                   </div>
                 </div>
 
-                <label className="qe-check-row">
+                <label className="check">
                   <input
                     type="checkbox"
                     checked={form.whatsapp_opt_in}
@@ -467,19 +514,27 @@ export default function GetStarted() {
             {step === 1 && (
               <div className="wiz-panel">
                 <h3>Step 2 · Your business</h3>
-                <div className="wiz-two">
-                  <div className="field">
-                    <label htmlFor="gs-co">Company name *</label>
+                <div className="form-grid">
+                  <div className={`field ${fieldErrors.company_name ? 'is-error' : ''}`}>
+                    <label htmlFor="gs-co">
+                      Company name <span className="req" aria-hidden="true">*</span>
+                    </label>
                     <input
                       id="gs-co"
+                      className="input"
                       value={form.company_name}
                       onChange={(e) => update('company_name', e.target.value)}
                       placeholder="Registered or brand name"
                     />
+                    {fieldErrors.company_name && (
+                      <span className="field-err">{fieldErrors.company_name}</span>
+                    )}
                   </div>
-                  <div className="field">
-                    <label htmlFor="gs-ind">Industry *</label>
-                    <select
+                  <div className={`field ${fieldErrors.industry ? 'is-error' : ''}`}>
+                    <label htmlFor="gs-ind">
+                      Industry <span className="req" aria-hidden="true">*</span>
+                    </label>
+                    <SelectBox
                       id="gs-ind"
                       value={form.industry}
                       onChange={(e) => update('industry', e.target.value)}
@@ -490,14 +545,16 @@ export default function GetStarted() {
                           {ind}
                         </option>
                       ))}
-                    </select>
+                    </SelectBox>
+                    {fieldErrors.industry && (
+                      <span className="field-err">{fieldErrors.industry}</span>
+                    )}
                   </div>
-                </div>
-
-                <div className="wiz-two">
-                  <div className="field">
-                    <label htmlFor="gs-stage">Business stage *</label>
-                    <select
+                  <div className={`field ${fieldErrors.business_stage ? 'is-error' : ''}`}>
+                    <label htmlFor="gs-stage">
+                      Business stage <span className="req" aria-hidden="true">*</span>
+                    </label>
+                    <SelectBox
                       id="gs-stage"
                       value={form.business_stage}
                       onChange={(e) => update('business_stage', e.target.value)}
@@ -508,11 +565,14 @@ export default function GetStarted() {
                           {s.label}
                         </option>
                       ))}
-                    </select>
+                    </SelectBox>
+                    {fieldErrors.business_stage && (
+                      <span className="field-err">{fieldErrors.business_stage}</span>
+                    )}
                   </div>
                   <div className="field">
                     <label htmlFor="gs-team">Team size</label>
-                    <select
+                    <SelectBox
                       id="gs-team"
                       value={form.team_size}
                       onChange={(e) => update('team_size', e.target.value)}
@@ -522,14 +582,11 @@ export default function GetStarted() {
                           {t}
                         </option>
                       ))}
-                    </select>
+                    </SelectBox>
                   </div>
-                </div>
-
-                <div className="wiz-two">
                   <div className="field">
                     <label htmlFor="gs-rev">Annual revenue</label>
-                    <select
+                    <SelectBox
                       id="gs-rev"
                       value={form.annual_revenue_range}
                       onChange={(e) => update('annual_revenue_range', e.target.value)}
@@ -539,11 +596,11 @@ export default function GetStarted() {
                           {r}
                         </option>
                       ))}
-                    </select>
+                    </SelectBox>
                   </div>
                   <div className="field">
                     <label htmlFor="gs-yrs">Years in business</label>
-                    <select
+                    <SelectBox
                       id="gs-yrs"
                       value={form.years_in_business}
                       onChange={(e) => update('years_in_business', e.target.value)}
@@ -553,7 +610,7 @@ export default function GetStarted() {
                           {y} years
                         </option>
                       ))}
-                    </select>
+                    </SelectBox>
                   </div>
                 </div>
 
@@ -563,6 +620,7 @@ export default function GetStarted() {
                     <input
                       id="gs-loc"
                       type="number"
+                      className="input"
                       min="1"
                       value={form.locations_count}
                       onChange={(e) => update('locations_count', e.target.value)}
@@ -572,6 +630,7 @@ export default function GetStarted() {
                     <label htmlFor="gs-city">City</label>
                     <input
                       id="gs-city"
+                      className="input"
                       value={form.city}
                       onChange={(e) => update('city', e.target.value)}
                       placeholder="Coimbatore, Chennai, Bengaluru…"
@@ -579,7 +638,7 @@ export default function GetStarted() {
                   </div>
                   <div className="field">
                     <label htmlFor="gs-state">State</label>
-                    <select
+                    <SelectBox
                       id="gs-state"
                       value={form.state}
                       onChange={(e) => update('state', e.target.value)}
@@ -589,7 +648,7 @@ export default function GetStarted() {
                           {st}
                         </option>
                       ))}
-                    </select>
+                    </SelectBox>
                   </div>
                 </div>
               </div>
@@ -598,7 +657,7 @@ export default function GetStarted() {
             {step === 2 && (
               <div className="wiz-panel">
                 <h3>Step 3 · Online presence</h3>
-                <label className="qe-check-row">
+                <label className="check">
                   <input
                     type="checkbox"
                     checked={!form.has_website}
@@ -612,6 +671,7 @@ export default function GetStarted() {
                     <label htmlFor="gs-web">Website URL</label>
                     <input
                       id="gs-web"
+                      className="input"
                       value={form.website_url}
                       onChange={(e) => update('website_url', e.target.value)}
                       placeholder="https://yourbrand.com"
@@ -619,11 +679,12 @@ export default function GetStarted() {
                   </div>
                 )}
 
-                <div className="wiz-two">
+                <div className="form-grid">
                   <div className="field">
                     <label htmlFor="gs-ig">Instagram handle</label>
                     <input
                       id="gs-ig"
+                      className="input"
                       value={form.instagram}
                       onChange={(e) => update('instagram', e.target.value)}
                       placeholder="@yourbrand"
@@ -633,6 +694,7 @@ export default function GetStarted() {
                     <label htmlFor="gs-li">LinkedIn</label>
                     <input
                       id="gs-li"
+                      className="input"
                       value={form.linkedin}
                       onChange={(e) => update('linkedin', e.target.value)}
                       placeholder="linkedin.com/company/..."
@@ -645,6 +707,7 @@ export default function GetStarted() {
                     <label htmlFor="gs-fb">Facebook</label>
                     <input
                       id="gs-fb"
+                      className="input"
                       value={form.facebook}
                       onChange={(e) => update('facebook', e.target.value)}
                       placeholder="Facebook page URL"
@@ -654,6 +717,7 @@ export default function GetStarted() {
                     <label htmlFor="gs-yt">YouTube</label>
                     <input
                       id="gs-yt"
+                      className="input"
                       value={form.youtube}
                       onChange={(e) => update('youtube', e.target.value)}
                       placeholder="Channel handle or URL"
@@ -663,6 +727,7 @@ export default function GetStarted() {
                     <label htmlFor="gs-x">X handle</label>
                     <input
                       id="gs-x"
+                      className="input"
                       value={form.x_handle}
                       onChange={(e) => update('x_handle', e.target.value)}
                       placeholder="@yourbrand"
@@ -674,6 +739,7 @@ export default function GetStarted() {
                   <label htmlFor="gs-gbp">Google Business Profile link</label>
                   <input
                     id="gs-gbp"
+                    className="input"
                     value={form.google_business_url}
                     onChange={(e) => update('google_business_url', e.target.value)}
                     placeholder="https://maps.google.com/..."
@@ -686,6 +752,7 @@ export default function GetStarted() {
                     {form.marketplace_links.map((link, idx) => (
                       <div key={idx} className="wiz-repeat-row">
                         <input
+                          className="input"
                           value={link}
                           onChange={(e) => {
                             const next = [...form.marketplace_links];
@@ -744,7 +811,7 @@ export default function GetStarted() {
 
                 <div className="field">
                   <label htmlFor="gs-spend">Monthly marketing spend</label>
-                  <select
+                  <SelectBox
                     id="gs-spend"
                     value={form.monthly_marketing_spend}
                     onChange={(e) => update('monthly_marketing_spend', e.target.value)}
@@ -754,7 +821,7 @@ export default function GetStarted() {
                         {m}
                       </option>
                     ))}
-                  </select>
+                  </SelectBox>
                 </div>
               </div>
             )}
@@ -796,11 +863,12 @@ export default function GetStarted() {
                   </div>
                 </div>
 
-                <div className="wiz-two">
+                <div className="form-grid">
                   <div className="field">
                     <label htmlFor="gs-cust">Who are your customers?</label>
                     <input
                       id="gs-cust"
+                      className="input"
                       value={form.target_customers}
                       onChange={(e) => update('target_customers', e.target.value)}
                       placeholder="e.g. D2C shoppers, B2B factories, hospitals…"
@@ -810,6 +878,7 @@ export default function GetStarted() {
                     <label htmlFor="gs-comp">Top competitors</label>
                     <input
                       id="gs-comp"
+                      className="input"
                       value={form.competitors}
                       onChange={(e) => update('competitors', e.target.value)}
                       placeholder="Names or websites"
@@ -890,7 +959,7 @@ export default function GetStarted() {
                   </div>
                   <div className="field">
                     <label htmlFor="gs-inhouse">In-house marketing/tech team</label>
-                    <select
+                    <SelectBox
                       id="gs-inhouse"
                       value={form.in_house_team}
                       onChange={(e) => update('in_house_team', e.target.value)}
@@ -900,7 +969,7 @@ export default function GetStarted() {
                           {t}
                         </option>
                       ))}
-                    </select>
+                    </SelectBox>
                   </div>
                 </div>
               </div>
@@ -925,10 +994,10 @@ export default function GetStarted() {
                   </div>
                 </div>
 
-                <div className="wiz-two">
+                <div className="form-grid">
                   <div className="field">
                     <label htmlFor="gs-pkg">Package</label>
-                    <select
+                    <SelectBox
                       id="gs-pkg"
                       value={form.package_id}
                       onChange={(e) => update('package_id', e.target.value)}
@@ -940,11 +1009,13 @@ export default function GetStarted() {
                         </option>
                       ))}
                       <option value="custom_cocktail">Custom Service Cocktail</option>
-                    </select>
+                    </SelectBox>
                   </div>
-                  <div className="field">
-                    <label htmlFor="gs-budget">Monthly budget *</label>
-                    <select
+                  <div className={`field ${fieldErrors.budget ? 'is-error' : ''}`}>
+                    <label htmlFor="gs-budget">
+                      Monthly budget <span className="req" aria-hidden="true">*</span>
+                    </label>
+                    <SelectBox
                       id="gs-budget"
                       value={form.budget}
                       onChange={(e) => update('budget', e.target.value)}
@@ -955,14 +1026,16 @@ export default function GetStarted() {
                           {b.label}
                         </option>
                       ))}
-                    </select>
+                    </SelectBox>
+                    {fieldErrors.budget && (
+                      <span className="field-err">{fieldErrors.budget}</span>
+                    )}
                   </div>
-                </div>
-
-                <div className="wiz-two">
-                  <div className="field">
-                    <label htmlFor="gs-timeline">Decision timeline *</label>
-                    <select
+                  <div className={`field ${fieldErrors.decision_timeline ? 'is-error' : ''}`}>
+                    <label htmlFor="gs-timeline">
+                      Decision timeline <span className="req" aria-hidden="true">*</span>
+                    </label>
+                    <SelectBox
                       id="gs-timeline"
                       value={form.decision_timeline}
                       onChange={(e) => update('decision_timeline', e.target.value)}
@@ -973,30 +1046,34 @@ export default function GetStarted() {
                           {d}
                         </option>
                       ))}
-                    </select>
+                    </SelectBox>
+                    {fieldErrors.decision_timeline && (
+                      <span className="field-err">{fieldErrors.decision_timeline}</span>
+                    )}
                   </div>
                   <div className="field">
                     <label htmlFor="gs-date">Preferred start date</label>
                     <input
                       id="gs-date"
                       type="date"
+                      className="input"
                       value={form.preferred_start_date}
                       onChange={(e) => update('preferred_start_date', e.target.value)}
                     />
                   </div>
+                  <div className="field field-full">
+                    <label htmlFor="gs-notes">Anything else</label>
+                    <textarea
+                      id="gs-notes"
+                      className="textarea"
+                      value={form.extra_notes}
+                      onChange={(e) => update('extra_notes', e.target.value)}
+                      placeholder="Any context, links or questions for our strategy team…"
+                    />
+                  </div>
                 </div>
 
-                <div className="field">
-                  <label htmlFor="gs-notes">Anything else</label>
-                  <textarea
-                    id="gs-notes"
-                    value={form.extra_notes}
-                    onChange={(e) => update('extra_notes', e.target.value)}
-                    placeholder="Any context, links or questions for our strategy team…"
-                  />
-                </div>
-
-                <label className="qe-check-row">
+                <label className="check">
                   <input
                     type="checkbox"
                     checked={form.wants_free_audit}
@@ -1005,14 +1082,22 @@ export default function GetStarted() {
                   <span>Yes, I want the free mini audit</span>
                 </label>
 
-                <label className="qe-check-row">
-                  <input
-                    type="checkbox"
-                    checked={form.consent}
-                    onChange={(e) => update('consent', e.target.checked)}
-                  />
-                  <span>I agree to be contacted by ATLABTS about my enquiry. *</span>
-                </label>
+                <div className="field">
+                  <label className={`check ${fieldErrors.consent ? 'is-error' : ''}`}>
+                    <input
+                      type="checkbox"
+                      checked={form.consent}
+                      onChange={(e) => update('consent', e.target.checked)}
+                    />
+                    <span>
+                      I agree to be contacted by ATLABTS about my enquiry.{' '}
+                      <span className="req" aria-hidden="true">*</span>
+                    </span>
+                  </label>
+                  {fieldErrors.consent && (
+                    <span className="field-err">{fieldErrors.consent}</span>
+                  )}
+                </div>
               </div>
             )}
 
@@ -1029,7 +1114,8 @@ export default function GetStarted() {
                     </div>
                     <p>
                       {form.full_name}
-                      {form.designation ? ` (${form.designation})` : ''} · {form.phone}
+                      {form.designation ? ` (${form.designation})` : ''} ·{' '}
+                      {formatPhoneForSubmit(form.phone)}
                       {form.email ? ` · ${form.email}` : ''} · Preferred: {form.preferred_channel}
                     </p>
                   </div>
