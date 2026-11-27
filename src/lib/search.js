@@ -1,7 +1,5 @@
 import { PRACTICES, ALL_SERVICES } from '../data/practices.js';
-import { PKGS, PKG_THEME } from '../data/packages.js';
 import { STOP, SYN, INTENT } from '../data/askAtla.js';
-import { fmt } from './format.js';
 
 export function expand(q) {
   const words = q
@@ -41,7 +39,6 @@ const b = (text) => ({ text, bold: true });
 export function compose(q, catalogue = {}) {
   const practices = catalogue.practices || PRACTICES;
   const allServices = catalogue.allServices || ALL_SERVICES;
-  const packages = catalogue.packages || PKGS;
 
   const trimmed = q.trim();
   if (INTENT.hello.test(trimmed) && trimmed.split(/\s+/).length < 4) {
@@ -94,26 +91,10 @@ export function compose(q, catalogue = {}) {
       matchedServices: [],
       p: [
         [
-          'We offer four monthly growth packages. Each includes everything in the level below it, and every price is open to negotiation:',
+          "Our pricing is customised to your business goals. Mix a Service Cocktail or DM us on Instagram @atla_bts and we'll share a plan.",
         ],
       ],
-      list: packages.map((p, i) => ({
-        c: p.color || PKG_THEME[i]?.c || '#14b8a6',
-        ic: p.icon || PKG_THEME[i]?.e || 'seed',
-        top: p.tier,
-        n: `${p.name}: ${fmt(p.price)}/month`,
-        d: `${p.motto} ${p.vision}`,
-        act: ['go', '/packages'],
-        go: 'View',
-      })),
-      after: [
-        [
-          'Prefer to choose services yourself? Mix them in the ',
-          b('Service Cocktail'),
-          ' and tap Calculate.',
-        ],
-      ],
-      pages: ['negotiate', 'packages', 'cocktail', 'contact'],
+      pages: ['cocktail', 'instagram'],
     };
   }
 

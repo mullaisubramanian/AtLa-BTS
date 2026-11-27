@@ -18,32 +18,32 @@ export async function getCatalogue() {
     ] = await Promise.all([
       supabase
         .from('practices')
-        .select('*')
+        .select('id, title, color, icon, tagline, intro, ideal_for, kpis, sort_order, is_active')
         .eq('is_active', true)
         .order('sort_order', { ascending: true }),
       supabase
         .from('practice_sections')
-        .select('*')
+        .select('id, practice_id, title, sort_order')
         .order('sort_order', { ascending: true }),
       supabase
         .from('services')
-        .select('*')
+        .select('id, practice_id, section_id, name, impact, sort_order, is_active')
         .eq('is_active', true)
         .order('sort_order', { ascending: true }),
       supabase
         .from('cocktail_items')
-        .select('*')
+        .select('id, name, color, practice_id, sort_order, is_active')
         .eq('is_active', true)
         .order('sort_order', { ascending: true }),
       supabase
         .from('packages')
-        .select('*')
+        .select('id, name, tier_label, motto, vision, color, icon, is_topmost, sort_order, is_active')
         .eq('is_active', true)
         .order('sort_order', { ascending: true }),
-      supabase.from('package_items').select('*'),
+      supabase.from('package_items').select('package_id, cocktail_item_id'),
       supabase
         .from('package_benefits')
-        .select('*')
+        .select('id, package_id, title, description, sort_order')
         .order('sort_order', { ascending: true }),
     ]);
 
@@ -112,7 +112,6 @@ export async function getCatalogue() {
     const menu = cocktailRes.data.map((m) => ({
       id: m.id,
       n: m.name,
-      p: m.monthly_price,
       c: m.color,
       practice_id: m.practice_id,
       sort_order: m.sort_order,
@@ -134,7 +133,6 @@ export async function getCatalogue() {
       id: pkg.id,
       name: pkg.name,
       tier: pkg.tier_label,
-      price: pkg.monthly_price,
       motto: pkg.motto || '',
       vision: pkg.vision || '',
       color: pkg.color,

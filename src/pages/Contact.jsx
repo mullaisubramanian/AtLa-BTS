@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { fmt } from '../lib/format';
 import { SITE_CONFIG } from '../config/site';
 import { submitLead } from '../lib/api';
 import { useCatalogue } from '../context/CatalogueContext';
@@ -388,7 +387,7 @@ export default function Contact() {
                     <option value="">Not sure yet, advise me</option>
                     {packages.map((p) => (
                       <option key={p.id} value={p.id}>
-                        {p.name} · {fmt(p.price)}/month
+                        {p.name}
                       </option>
                     ))}
                     <option value="custom_cocktail">Custom Service Cocktail</option>

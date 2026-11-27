@@ -117,12 +117,23 @@
 
 .price-reveal .total {
   color: #fff;
-  margin: 2px 0;
+  font-size: 1.28rem;
+  font-weight: 800;
+  font-family: 'Sora', sans-serif;
+  margin: 0 0 6px;
+}
+
+.price-reveal .reveal-line {
+  font-size: 0.85rem;
+  color: #e6fffb;
+  margin: 0 0 6px;
+  line-height: 1.45;
 }
 
 .price-reveal span {
-  font-size: 0.75rem;
-  color: #cffff9;
+  display: block;
+  font-size: 0.78rem;
+  color: #bffcf6;
 }
 
 .neg-row {

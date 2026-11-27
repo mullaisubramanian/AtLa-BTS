@@ -150,6 +150,14 @@ export const PAGES = {
     path: '/contact',
     isContact: true,
   },
+  instagram: {
+    key: 'instagram',
+    title: 'DM us on Instagram',
+    icon: 'instagram',
+    desc: '@atla_bts',
+    path: 'https://www.instagram.com/atla_bts/',
+    isInstagram: true,
+  },
   negotiate: {
     key: 'negotiate',
     title: "Let's negotiate",

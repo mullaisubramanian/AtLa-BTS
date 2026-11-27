@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { fmt } from '../lib/format';
 import { SITE_CONFIG } from '../config/site';
 import { useCatalogue } from '../context/CatalogueContext';
 import { track } from '../lib/api';
@@ -10,7 +9,7 @@ import FlipCard from '../components/FlipCard';
 import './Packages.css';
 
 export default function Packages() {
-  const { packages, menu } = useCatalogue();
+  const { packages } = useCatalogue();
   const [flippedMap, setFlippedMap] = useState({});
 
   const toggleFlip = (pkg) => {
@@ -47,10 +46,6 @@ export default function Packages() {
 
           <div className="pkg-grid">
             {packages.map((p, i) => {
-              const val = p.inc.reduce(
-                (a, id) => a + (menu.find((m) => m.id === id)?.p || 0),
-                0
-              );
               const isTop = Boolean(p.is_topmost || i === 3);
 
               return (
@@ -81,16 +76,11 @@ export default function Packages() {
                         <span className="tier">{p.tier}</span>
                         <h3>{p.name}</h3>
                         <div className="motto">{p.motto}</div>
-                        <div className="price">
-                          {fmt(p.price)}
-                          <small> / month</small>
-                        </div>
+                        <div className="price">Custom pricing</div>
                       </div>
 
                       <div className="pk-body">
-                        <div className="pk-worth">
-                          {p.inc.length} services · worth {fmt(val)}/month
-                        </div>
+                        <div className="pk-worth">{p.inc.length} services included</div>
                         <p className="vision">{p.vision}</p>
                         <div className="meter" aria-hidden="true">
                           {[0, 1, 2, 3].map((k) => (
@@ -118,9 +108,7 @@ export default function Packages() {
                         </div>
                         <div>
                           <small>{p.tier}</small>
-                          <b>
-                            {p.name} · {fmt(p.price)}/mo
-                          </b>
+                          <b>{p.name}</b>
                         </div>
                       </div>
                       <ul>
@@ -154,9 +142,8 @@ export default function Packages() {
           </div>
 
           <p className="fineprint">
-            Monthly retainers with a 3-month minimum. Ad spend, creator fees and third-party
-            licences are paid at actuals. GST extra. Every package can be customised for enterprises
-            and multi-location businesses.
+            Every package can be tailored for startups, SMEs, enterprises and multi-location
+            businesses.
           </p>
         </div>
       </div>

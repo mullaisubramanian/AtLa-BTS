@@ -3,13 +3,11 @@ import { Link } from 'react-router-dom';
 import { useModals } from '../context/ModalContext';
 import { useFocusTrap } from '../lib/useFocusTrap';
 import { submitLead } from '../lib/api';
-import { fmt } from '../lib/format';
 import { SITE_CONFIG } from '../config/site';
 import {
   ACADEMY_TRACKS,
   BUDGET_RANGES,
   BUSINESS_STAGES,
-  budgetForAmount,
 } from '../data/options';
 import Icon from './Icon';
 import { PhoneInput, SelectBox } from './FormFields';
@@ -48,8 +46,7 @@ export default function QuickEnquiryModal() {
     setEmail('');
     setCompanyName('');
     setStage('growing_sme');
-    const knownAmount = quickEnquiry.packagePrice || quickEnquiry.cocktailTotal;
-    setBudget(knownAmount ? budgetForAmount(knownAmount) : 'not_sure');
+    setBudget('not_sure');
     setAcademyTrack(quickEnquiry.academyTrack || ACADEMY_TRACKS[0]);
     setMessage(quickEnquiry.defaultMessage || '');
     setConsent(false);
@@ -232,7 +229,6 @@ export default function QuickEnquiryModal() {
                     <div>
                       <div className="qe-sum-head">
                         <b>Your Service Cocktail</b>
-                        <span>{fmt(quickEnquiry.cocktailTotal || 0)}/month</span>
                       </div>
                       <div className="qe-sum-pills">
                         {quickEnquiry.cocktailItems.map((m) => (
@@ -248,9 +244,6 @@ export default function QuickEnquiryModal() {
                         <small>Selected Package</small>
                         <b>{quickEnquiry.packageName}</b>
                       </div>
-                      {quickEnquiry.packagePrice && (
-                        <span>{fmt(quickEnquiry.packagePrice)}/month</span>
-                      )}
                     </div>
                   )}
 

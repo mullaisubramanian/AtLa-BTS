@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { fmt } from '../../lib/format';
 import { SITE_CONFIG } from '../../config/site';
 import { track } from '../../lib/api';
 import { useCatalogue } from '../../context/CatalogueContext';
@@ -22,41 +21,34 @@ export default function Bill({
 }) {
   const { menu, packages } = useCatalogue();
   const { openQuickEnquiry } = useModals();
-  const [displayTotal, setDisplayTotal] = useState(0);
 
-  const serverTotal = quoteResult?.total ?? 0;
-
-  useEffect(() => {
-    if (!isCalculatedVisible || !quoteResult) return;
-    let rafId = 0;
-    const t0 = performance.now();
-    const step = (t) => {
-      const k = Math.min(1, (t - t0) / 900);
-      const e = 1 - Math.pow(1 - k, 3);
-      setDisplayTotal(Math.round((serverTotal * e) / 100) * 100);
-      if (k < 1) {
-        rafId = requestAnimationFrame(step);
-      } else {
-        setDisplayTotal(serverTotal);
-      }
-    };
-    rafId = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(rafId);
-  }, [isCalculatedVisible, quoteResult, serverTotal]);
-
+  // Suggest the package covering the most services in the glass (prefer lowest tier on ties)
   const tipInfo = useMemo(() => {
-    if (!isCalculatedVisible || !quoteResult?.suggested_package_id || !quoteResult?.suggestion_type) {
+    if (!isCalculatedVisible || !quoteResult || !items.length || !packages.length) {
       return null;
     }
-    const best = packages.find((p) => p.id === quoteResult.suggested_package_id);
-    if (!best) return null;
+
+    let best = null;
+    let bestCount = -1;
+
+    packages.forEach((pkg) => {
+      const coveredCount = items.reduce(
+        (count, m) => (pkg.inc.includes(m.id) ? count + 1 : count),
+        0
+      );
+      if (coveredCount > bestCount) {
+        bestCount = coveredCount;
+        best = pkg;
+      }
+    });
+
+    if (!best || bestCount <= 0) return null;
 
     const extra = best.inc
       .filter((id) => !selectedIds.has(id))
       .map((id) => menu.find((m) => m.id === id))
       .filter(Boolean);
 
-    const val = best.inc.reduce((a, id) => a + (menu.find((m) => m.id === id)?.p || 0), 0);
     const list =
       extra
         .slice(0, 3)
@@ -64,14 +56,13 @@ export default function Bill({
         .join(', ') + (extra.length > 3 ? '…' : '');
 
     return {
-      type: quoteResult.suggestion_type, // 'saving' | 'upgrade'
-      amount: quoteResult.suggested_amount,
       best,
+      coveredCount: bestCount,
+      allCovered: bestCount === items.length,
       extra,
-      val,
       list,
     };
-  }, [isCalculatedVisible, quoteResult, packages, selectedIds, menu]);
+  }, [isCalculatedVisible, quoteResult, items, packages, selectedIds, menu]);
 
   const uniqueInterests = useMemo(
     () => [...new Set(items.map((m) => m.practice_id).filter(Boolean))],
@@ -84,13 +75,10 @@ export default function Bill({
       source: 'cocktail_serve',
       title: 'Serve my Service Cocktail',
       cocktailItems: items,
-      cocktailTotal: quoteResult.total,
       isCustomCocktail: true,
       cocktailQuoteId: quoteResult.quote_id,
       interests: uniqueInterests,
-      defaultMessage: `My Service Cocktail:\n${items
-        .map((m) => `• ${m.n}`)
-        .join('\n')}\nEstimated: ${fmt(quoteResult.total)}/month`,
+      defaultMessage: `My Service Cocktail:\n${items.map((m) => `• ${m.n}`).join('\n')}`,
     });
   };
 
@@ -147,90 +135,62 @@ export default function Bill({
 
       {isCalculatedVisible && quoteResult && (
         <div className="price-reveal show">
-          <small>Your cocktail costs</small>
-          <div className="total">{fmt(displayTotal)}</div>
-          <span>per month · GST extra</span>
+          <div className="total">Your cocktail is ready</div>
+          <p className="reveal-line">
+            {items.length} {items.length === 1 ? 'service' : 'services'} in your glass. Pricing is
+            tailored to your business.
+          </p>
+          <span>Let&apos;s talk and build the right plan for you.</span>
         </div>
       )}
 
       {isCalculatedVisible && tipInfo && (
         <div className="tip show">
           <span className="tip-ic">
-            <Icon name={tipInfo.type === 'saving' ? 'bulb' : 'up'} color="#08514d" wrap={false} />
+            <Icon name="bulb" color="#08514d" wrap={false} />
           </span>
-          {tipInfo.type === 'saving' ? (
-            <>
-              <b>Smarter pour:</b> the <b>{tipInfo.best.name}</b> package covers everything in your
-              glass for <b>{fmt(tipInfo.best.price)}</b>. You save{' '}
-              <b>{fmt(tipInfo.amount)}/month</b>
-              {tipInfo.extra.length > 0 && (
-                <>
-                  {' '}
-                  and also get{' '}
-                  <b>
-                    {tipInfo.extra.length} extra service{tipInfo.extra.length > 1 ? 's' : ''}
-                  </b>{' '}
-                  ({tipInfo.list})
-                </>
-              )}
-              .
-              <br />
-              <Link
-                className="btn btn-primary"
-                style={{ marginTop: '10px', padding: '9px 16px', fontSize: '.8rem' }}
-                to="/packages"
-              >
-                See {tipInfo.best.name} →
-              </Link>{' '}
-              <a
-                className="btn btn-neu"
-                style={{ marginTop: '10px', padding: '9px 16px', fontSize: '.8rem' }}
-                href={SITE_CONFIG.instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() =>
-                  track('negotiate_click', {
-                    source: 'package_negotiate',
-                    package_id: tipInfo.best.id,
-                  })
-                }
-              >
-                Let&apos;s negotiate →
-              </a>
-            </>
+          <b>Package match:</b> the <b>{tipInfo.best.name}</b> package covers{' '}
+          {tipInfo.allCovered ? (
+            <>all {items.length} services in your glass</>
           ) : (
             <>
-              <b>Upgrade idea:</b> for just <b>{fmt(tipInfo.amount)}</b> more, the{' '}
-              <b>{tipInfo.best.name}</b> package adds{' '}
-              <b>
-                {tipInfo.extra.length} service{tipInfo.extra.length > 1 ? 's' : ''}
-              </b>{' '}
-              ({tipInfo.list}), worth <b>{fmt(tipInfo.val)}</b> in total.
-              <br />
-              <Link
-                className="btn btn-neu"
-                style={{ marginTop: '10px', padding: '9px 16px', fontSize: '.8rem' }}
-                to="/packages"
-              >
-                Compare packages →
-              </Link>{' '}
-              <a
-                className="btn btn-primary"
-                style={{ marginTop: '10px', padding: '9px 16px', fontSize: '.8rem' }}
-                href={SITE_CONFIG.instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() =>
-                  track('negotiate_click', {
-                    source: 'package_negotiate',
-                    package_id: tipInfo.best.id,
-                  })
-                }
-              >
-                Let&apos;s negotiate →
-              </a>
+              <b>{tipInfo.coveredCount}</b> of your <b>{items.length}</b> selected services
             </>
           )}
+          {tipInfo.extra.length > 0 && (
+            <>
+              {' '}
+              and also includes{' '}
+              <b>
+                {tipInfo.extra.length} extra service{tipInfo.extra.length > 1 ? 's' : ''}
+              </b>{' '}
+              ({tipInfo.list})
+            </>
+          )}
+          .
+          <br />
+          <Link
+            className="btn btn-primary"
+            style={{ marginTop: '10px', padding: '9px 16px', fontSize: '.8rem' }}
+            to="/packages"
+          >
+            See {tipInfo.best.name} →
+          </Link>{' '}
+          <a
+            className="btn btn-neu"
+            style={{ marginTop: '10px', padding: '9px 16px', fontSize: '.8rem' }}
+            href={SITE_CONFIG.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              track('negotiate_click', {
+                source: 'package_negotiate',
+                package_id: tipInfo.best.id,
+              })
+            }
+          >
+            Let&apos;s negotiate →
+          </a>
         </div>
       )}
 

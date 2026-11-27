@@ -86,17 +86,17 @@ export default function WebShowcase() {
             <div>
               <i style={{ '--h': '#5ff3e6' }} />
               <b>Product</b>
-              <span>₹1,499</span>
+              <span>Featured</span>
             </div>
             <div>
               <i style={{ '--h': '#fdba74' }} />
               <b>Product</b>
-              <span>₹2,199</span>
+              <span>Bestseller</span>
             </div>
             <div>
               <i style={{ '--h': '#c4b5fd' }} />
               <b>Product</b>
-              <span>₹999</span>
+              <span>New arrival</span>
             </div>
           </div>
           <div className="b-toast">

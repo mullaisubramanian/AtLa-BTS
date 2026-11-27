@@ -67,7 +67,6 @@ export default function Cocktail() {
     setHasCalculatedOnce(true);
     setIsCalculatedVisible(true);
     track('cocktail_calculate', {
-      total: data.total,
       quote_id: data.quote_id,
       count: ids.length,
     });
@@ -92,7 +91,7 @@ export default function Cocktail() {
         <meta property="og:title" content="Service Cocktail — AtLa/BTS" />
         <meta
           name="description"
-          content="Mix your own custom AtLa/BTS growth recipe. Drag or tap services into the glass and calculate your monthly estimate or compare with packages."
+          content="Mix your own custom AtLa/BTS growth recipe. Drag or tap services into the glass to see your custom plan and matching package recommendation."
         />
       </Helmet>
 
@@ -105,7 +104,7 @@ export default function Cocktail() {
             </h2>
             <p>
               Drag services into the glass, or tap them. When your mix is ready, hit{' '}
-              <b>Calculate</b> to see what it costs, and whether a package gives you more for less.
+              <b>Calculate</b> to see your custom plan and matching package recommendation.
             </p>
           </div>
 
@@ -150,9 +149,8 @@ export default function Cocktail() {
           </div>
 
           <p className="fineprint">
-            Indicative monthly retainers. One-time builds (websites, CRM/ERP) are spread over a
-            12-month engagement. Ad spend, creator fees and third-party licences are paid at
-            actuals. GST extra.
+            Every Service Cocktail can be tailored to your business goals and scale. Mix what you
+            need and we&apos;ll craft the right plan for you.
           </p>
         </div>
       </div>

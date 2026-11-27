@@ -39,8 +39,11 @@ function readCache() {
     if (
       !parsed.data?.practices?.length ||
       !parsed.data?.menu?.length ||
-      !parsed.data?.packages?.length
+      !parsed.data?.packages?.length ||
+      parsed.data.packages.some((x) => x.price !== undefined) ||
+      parsed.data.menu.some((x) => x.p !== undefined)
     ) {
+      window.localStorage.removeItem(CACHE_KEY);
       return null;
     }
     return parsed.data;
