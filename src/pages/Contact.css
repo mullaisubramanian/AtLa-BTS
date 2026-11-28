@@ -16,6 +16,13 @@
   font-size: 1.17rem;
 }
 
+.c-social-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  align-items: center;
+}
+
 .c-row {
   display: flex;
   gap: 16px;

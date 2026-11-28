@@ -39,16 +39,34 @@
   color: var(--deep);
 }
 
+.foot-socials {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .foot a.foot-ig {
   display: inline-flex;
   align-items: center;
   gap: 7px;
 }
 
-.foot a.foot-ig svg {
+.foot a.foot-ig svg,
+.foot a.foot-social-icon svg {
   width: 15px;
   height: 15px;
   flex: none;
+}
+
+.foot a.foot-social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: 12px;
 }
 
 .copy {

@@ -182,20 +182,37 @@ export default function Contact() {
                 No sales scripts. You speak directly with a strategist.
               </p>
 
-              <a
-                className="c-row"
-                href={SITE_CONFIG.instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <div className="ic">
-                  <Icon name="instagram" color="#0fb5ad" wrap={false} />
-                </div>
-                <div>
-                  <small>DM us on Instagram</small>
-                  <b>{SITE_CONFIG.instagramHandle}</b>
-                </div>
-              </a>
+              <div className="c-social-row">
+                <a
+                  className="c-row"
+                  href={SITE_CONFIG.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div className="ic">
+                    <Icon name="instagram" color="#0fb5ad" wrap={false} />
+                  </div>
+                  <div>
+                    <small>DM us on Instagram</small>
+                    <b>{SITE_CONFIG.instagramHandle}</b>
+                  </div>
+                </a>
+
+                <a
+                  className="c-row"
+                  href={SITE_CONFIG.linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div className="ic">
+                    <Icon name="linkedin" color="#0fb5ad" wrap={false} />
+                  </div>
+                  <div>
+                    <small>Follow us on LinkedIn</small>
+                    <b>{SITE_CONFIG.brand}</b>
+                  </div>
+                </a>
+              </div>
 
               <a className="c-row" href={`mailto:${SITE_CONFIG.email}`}>
                 <div className="ic">

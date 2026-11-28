@@ -16,7 +16,10 @@ const BASE_SCHEMA = {
     { '@type': 'State', name: 'Tamil Nadu' },
     { '@type': 'Country', name: 'India' },
   ],
-  sameAs: ['https://www.instagram.com/atla_bts/'],
+  sameAs: [
+    'https://www.instagram.com/atla_bts/',
+    'https://www.linkedin.com/company/atla-bts/',
+  ],
 };
 
 export default function Seo({

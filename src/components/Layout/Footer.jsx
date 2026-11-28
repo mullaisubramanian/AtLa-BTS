@@ -58,17 +58,28 @@ export default function Footer() {
           <div>
             <h2 className="foot-heading">Connect</h2>
             <Link to="/contact">Contact</Link>
-            <a
-              className="foot-ig"
-              href={SITE_CONFIG.instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Icon name="instagram" color="var(--brand-teal)" wrap={false} />
-              <span>
-                DM us on Instagram · <b>{SITE_CONFIG.instagramHandle}</b>
-              </span>
-            </a>
+            <div className="foot-socials">
+              <a
+                className="foot-ig"
+                href={SITE_CONFIG.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon name="instagram" color="var(--brand-teal)" wrap={false} />
+                <span>
+                  DM us on Instagram · <b>{SITE_CONFIG.instagramHandle}</b>
+                </span>
+              </a>
+              <a
+                className="foot-social-icon"
+                href={SITE_CONFIG.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="AtLa/BTS on LinkedIn"
+              >
+                <Icon name="linkedin" color="var(--brand-teal)" wrap={false} />
+              </a>
+            </div>
             <a href={`mailto:${SITE_CONFIG.email}`}>{SITE_CONFIG.email}</a>
             <Link to="/privacy">Privacy Policy</Link>
             <Link to="/terms">Terms of Use</Link>
