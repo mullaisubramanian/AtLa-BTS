@@ -52,7 +52,7 @@ export default function Footer() {
             <Link to="/service-cocktail">Service Cocktail</Link>
             <Link to="/packages">Packages</Link>
             <Link to="/academy">ATLA Academy</Link>
-            <Link to="/careers">Careers</Link>
+            <Link to="/team">Team</Link>
           </div>
 
           <div>

@@ -1,13 +1,16 @@
 {
+  "redirects": [
+    { "source": "/careers", "destination": "/team", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/about", "destination": "/about/index.html" },
+    { "source": "/team", "destination": "/team/index.html" },
     { "source": "/services", "destination": "/services/index.html" },
     { "source": "/service-cocktail", "destination": "/service-cocktail/index.html" },
     { "source": "/packages", "destination": "/packages/index.html" },
     { "source": "/academy", "destination": "/academy/index.html" },
     { "source": "/contact", "destination": "/contact/index.html" },
     { "source": "/get-started", "destination": "/get-started/index.html" },
-    { "source": "/careers", "destination": "/careers/index.html" },
     { "source": "/privacy", "destination": "/privacy/index.html" },
     { "source": "/terms", "destination": "/terms/index.html" },
     { "source": "/admin", "destination": "/admin.html" },

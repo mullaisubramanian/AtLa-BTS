@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { SUGG } from '../../data/askAtla';
 import { useModals } from '../../context/ModalContext';
-import Logo from '../Logo';
+import Slash from '../Slash';
 import Icon from '../Icon';
 import './Composer.css';
 
@@ -44,9 +44,11 @@ export default function Composer() {
   return (
     <div className="composer glass">
       <div className="comp-top">
-        <Logo className="comp-logo" />
-        <b>AtLa/BTS AI</b>
-        <span className="comp-tag">Business growth assistant</span>
+        <Slash size={72} className="comp-slash" />
+        <div>
+          <b>AtLa/BTS AI</b>
+          <span className="comp-tag">Business growth assistant</span>
+        </div>
       </div>
       <form
         className="comp-row"

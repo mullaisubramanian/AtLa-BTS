@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useModals } from '../../context/ModalContext';
 import { useFocusTrap } from '../../lib/useFocusTrap';
-import Logo from '../Logo';
+import Slash from '../Slash';
 import Icon from '../Icon';
 import ChatMessage from './ChatMessage';
 import './AskModal.css';
@@ -68,7 +68,7 @@ export default function AskModal() {
     >
       <div className="ask-box" ref={trapRef}>
         <div className="ask-head">
-          <Logo className="comp-logo" />
+          <Slash size={42} animated={false} />
           <div>
             <b id="ask-modal-title">AtLa/BTS AI</b>
             <small>Business growth assistant</small>

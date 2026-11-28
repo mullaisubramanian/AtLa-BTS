@@ -85,7 +85,7 @@
   width: 22px;
 }
 
-@media (max-width: 1150px) {
+@media (max-width: 1200px) {
   .nav-links a {
     padding: 9px 10px;
     font-size: 0.82rem;

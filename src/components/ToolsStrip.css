@@ -1,5 +1,5 @@
 .tools-strip-sec {
-  padding-top: 10px;
+  padding-top: 24px;
   padding-bottom: 10px;
 }
 
@@ -17,7 +17,7 @@
 }
 
 .tools-head h2 {
-  font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+  font-size: clamp(1.35rem, 2.7vw, 1.85rem);
   color: var(--deep);
 }
 
@@ -38,39 +38,34 @@
   gap: 10px;
   padding: 10px 16px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.62);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  transition: transform 0.2s ease, background 0.2s ease;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
 }
 
 .tool-item img {
   height: 28px;
   width: auto;
   display: block;
-  filter: grayscale(1);
-  opacity: 0.72;
-  transition: filter 0.22s ease, opacity 0.22s ease;
+  transition: transform 200ms ease, filter 200ms ease;
 }
 
 .tool-item span {
   font-size: 0.86rem;
   font-weight: 700;
-  color: var(--muted);
-  transition: color 0.22s ease;
-}
-
-.tool-item:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.9);
-}
-
-.tool-item:hover img {
-  filter: grayscale(0);
-  opacity: 1;
-}
-
-.tool-item:hover span {
   color: var(--deep);
+}
+
+.tool-item:hover,
+.tool-item:focus-visible {
+  background: #ffffff;
+  box-shadow: 0 12px 26px rgba(8, 81, 77, 0.14);
+}
+
+.tool-item:hover img,
+.tool-item:focus-visible img {
+  transform: scale(1.12);
+  filter: drop-shadow(0 4px 10px rgba(8, 81, 77, 0.18));
 }
 
 .tools-note {
@@ -90,8 +85,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tool-item {
+  .tool-item,
+  .tool-item img {
     transition: none;
   }
+  .tool-item:hover img,
+  .tool-item:focus-visible img {
+    transform: none;
+  }
 }
-

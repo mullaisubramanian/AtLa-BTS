@@ -3,31 +3,32 @@
   inset: 0;
   z-index: 1200;
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  padding: 24px;
-  background: rgba(8, 81, 77, 0.16);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(8, 81, 77, 0.28);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .slash-popup-card {
   position: relative;
   width: 100%;
-  max-width: 450px;
-  padding: 22px 24px;
-  border-radius: 24px;
-  border: 1px solid rgba(15, 181, 173, 0.35);
+  max-width: 440px;
+  padding: 34px 28px 28px;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  background: rgba(244, 251, 251, 0.92);
   box-shadow:
-    0 24px 56px rgba(8, 81, 77, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.75);
-  animation: slashSlideUp 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    0 28px 64px rgba(8, 81, 77, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  animation: slashPopupCardIn 0.26s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-@keyframes slashSlideUp {
+@keyframes slashPopupCardIn {
   from {
     opacity: 0;
-    transform: translateY(20px) scale(0.98);
+    transform: translateY(14px) scale(0.96);
   }
   to {
     opacity: 1;
@@ -37,13 +38,13 @@
 
 .slash-popup-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 14px;
+  right: 14px;
   min-width: 44px;
   min-height: 44px;
   border-radius: 50%;
   border: 0;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.78);
   color: var(--deep);
   font-size: 1.35rem;
   line-height: 1;
@@ -54,64 +55,78 @@
 }
 
 .slash-popup-close:hover {
-  background: #fff;
-  transform: scale(1.05);
+  background: #ffffff;
+  transform: scale(1.06);
 }
 
 .slash-popup-body {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
 }
 
 .slash-popup-avatar {
-  padding-top: 2px;
+  animation: slashAvatarPop 0.36s cubic-bezier(0.3, 1.4, 0.5, 1) forwards;
 }
 
-.slash-popup-content {
-  flex: 1;
-  min-width: 0;
-  padding-right: 28px;
+@keyframes slashAvatarPop {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .slash-popup-meta {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #016f75;
-  margin-bottom: 8px;
-}
-
-.slash-popup-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #0fb5ad;
 }
 
 .slash-popup-msg {
-  min-height: 48px;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .slash-popup-msg p {
   margin: 0;
   color: var(--deep);
-  font-size: 0.96rem;
+  font-size: 1.02rem;
   line-height: 1.55;
   font-weight: 600;
+}
+
+.slash-msg-fade {
+  animation: slashMsgFade 0.28s ease forwards;
+}
+
+@keyframes slashMsgFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .slash-typing {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.72);
+  padding: 12px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
 }
 
 .slash-typing i {
@@ -145,27 +160,22 @@
 }
 
 .slash-popup-actions {
-  margin-top: 14px;
+  margin-top: 4px;
 }
 
 .slash-ok-btn {
-  padding: 10px 18px;
-  font-size: 0.84rem;
-}
-
-@media (max-width: 600px) {
-  .slash-popup-backdrop {
-    justify-content: center;
-    padding: 14px;
-  }
+  min-width: 140px;
+  min-height: 46px;
+  padding: 10px 24px;
+  font-size: 0.9rem;
+  justify-content: center;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slash-popup-card {
-    animation: none;
-  }
+  .slash-popup-card,
+  .slash-popup-avatar,
+  .slash-msg-fade,
   .slash-typing i {
     animation: none;
   }
 }
-

@@ -1,6 +1,8 @@
+import { useCallback, useState } from 'react';
 import Seo from '../components/Seo';
 import Eyebrow from '../components/Eyebrow';
-import Hero from '../components/home/Hero';
+import CinematicStory from '../components/home/CinematicStory';
+import SlashStoryGuide from '../components/home/SlashStoryGuide';
 import OrbitStage from '../components/AskAtla/OrbitStage';
 import SystemLayers from '../components/home/SystemLayers';
 import WhoWeServe from '../components/home/WhoWeServe';
@@ -14,6 +16,17 @@ import CtaBand from '../components/home/CtaBand';
 import LocationsSection from '../components/LocationsSection';
 
 export default function Home() {
+  const [storyState, setStoryState] = useState({
+    progress: 0,
+    activeScene: 0,
+    ended: false,
+    visible: false,
+  });
+
+  const handleStoryState = useCallback((next) => {
+    setStoryState(next);
+  }, []);
+
   return (
     <section className="page-enter">
       <Seo
@@ -22,7 +35,9 @@ export default function Home() {
         path="/"
       />
 
-      <Hero />
+      <CinematicStory onStoryState={handleStoryState} />
+      <ToolsStrip />
+      <LocationsSection />
 
       <div className="ask-sec">
         <div className="wrap">
@@ -47,9 +62,9 @@ export default function Home() {
       <FiveDLoop />
       <FutureOfSearch />
       <WhyUs />
-      <ToolsStrip />
       <CtaBand />
-      <LocationsSection />
+
+      <SlashStoryGuide storyState={storyState} />
     </section>
   );
 }

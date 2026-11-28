@@ -148,6 +148,7 @@ export default function Services() {
                 return (
                   <FlipCard
                     key={p.id}
+                    id={p.id}
                     className="svc-card"
                     color={p.c}
                     flipped={Boolean(flippedMap[p.id])}

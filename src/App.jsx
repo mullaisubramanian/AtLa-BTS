@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import BackgroundBlobs from './components/Layout/BackgroundBlobs';
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
@@ -19,7 +19,7 @@ import Packages from './pages/Packages';
 import Academy from './pages/Academy';
 import Contact from './pages/Contact';
 import GetStarted from './pages/GetStarted';
-import Careers from './pages/Careers';
+import Team from './pages/Team';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import NotFound from './pages/NotFound';
@@ -96,7 +96,8 @@ export default function App() {
           <Route path="/academy" element={<Academy />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/get-started" element={<GetStarted />} />
-          <Route path="/careers" element={<Careers />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/careers" element={<Navigate to="/team" replace />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="*" element={<NotFound />} />

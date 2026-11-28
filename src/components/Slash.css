@@ -5,10 +5,12 @@
   flex-shrink: 0;
 }
 
-.slash-bot svg {
+.slash-bot picture,
+.slash-bot img {
   width: 100%;
   height: 100%;
   display: block;
+  object-fit: contain;
 }
 
 .slash-bot.is-animated {
@@ -21,7 +23,7 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-5px);
+    transform: translateY(-6px);
   }
 }
 
@@ -30,4 +32,3 @@
     animation: none;
   }
 }
-

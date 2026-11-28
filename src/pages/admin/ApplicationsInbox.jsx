@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useModals } from '../../context/ModalContext';
+import { formatAnswerLabel } from '../../data/teamRoles';
 
 const APP_STATUSES = [
   { value: 'new', label: 'New', color: '#0fb5ad' },
@@ -16,12 +17,24 @@ function escapeCsv(val) {
   return `"${s.replace(/"/g, '""')}"`;
 }
 
+function formatAnswerValue(val) {
+  if (Array.isArray(val)) return val.join(', ');
+  if (val == null) return '—';
+  return String(val);
+}
+
 export default function ApplicationsInbox({ applications, onUpdated }) {
   const { showToast } = useModals();
   const [statusTab, setStatusTab] = useState('all');
   const [roleFilter, setRoleFilter] = useState('all');
   const [query, setQuery] = useState('');
   const [updatingId, setUpdatingId] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
+
+  const selectedApp = useMemo(
+    () => applications.find((a) => a.id === selectedId) || null,
+    [applications, selectedId]
+  );
 
   const statusCounts = useMemo(() => {
     const counts = { all: applications.length };
@@ -45,7 +58,8 @@ export default function ApplicationsInbox({ applications, onUpdated }) {
       if (statusTab !== 'all' && a.status !== statusTab) return false;
       if (roleFilter !== 'all' && a.role !== roleFilter) return false;
       if (q) {
-        const hay = `${a.full_name || ''} ${a.email || ''} ${a.role || ''} ${a.note || ''}`.toLowerCase();
+        const answersText = a.answers ? JSON.stringify(a.answers) : '';
+        const hay = `${a.full_name || ''} ${a.email || ''} ${a.city || ''} ${a.role || ''} ${a.note || ''} ${answersText}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
@@ -69,14 +83,27 @@ export default function ApplicationsInbox({ applications, onUpdated }) {
   };
 
   const exportCsv = () => {
-    const headers = ['Date', 'Name', 'Email', 'Phone', 'Role', 'Portfolio URL', 'Note', 'Status'];
+    const headers = [
+      'Date',
+      'Name',
+      'Email',
+      'Phone',
+      'City',
+      'Role',
+      'Portfolio URL',
+      'Answers',
+      'Note',
+      'Status',
+    ];
     const rows = filtered.map((a) => [
       a.created_at ? new Date(a.created_at).toISOString() : '',
       a.full_name || '',
       a.email || '',
       a.phone || '',
+      a.city || '',
       a.role || '',
       a.portfolio_url || '',
+      a.answers && Object.keys(a.answers).length > 0 ? JSON.stringify(a.answers) : '',
       a.note || '',
       a.status || '',
     ]);
@@ -89,6 +116,13 @@ export default function ApplicationsInbox({ applications, onUpdated }) {
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  const answerEntries =
+    selectedApp?.answers && typeof selectedApp.answers === 'object'
+      ? Object.entries(selectedApp.answers).filter(([, v]) =>
+          Array.isArray(v) ? v.length > 0 : String(v ?? '').trim() !== ''
+        )
+      : [];
 
   return (
     <>
@@ -117,7 +151,7 @@ export default function ApplicationsInbox({ applications, onUpdated }) {
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search applicant name, email, note…"
+          placeholder="Search applicant name, email, city, role…"
           aria-label="Search applications"
         />
         <select
@@ -149,7 +183,7 @@ export default function ApplicationsInbox({ applications, onUpdated }) {
               <th>Date</th>
               <th>Applicant</th>
               <th>Role</th>
-              <th>Portfolio / Note</th>
+              <th>Role Details / Note</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -163,14 +197,18 @@ export default function ApplicationsInbox({ applications, onUpdated }) {
             ) : (
               filtered.map((a) => {
                 const st = STATUS_MAP[a.status] || { label: a.status, color: '#64748b' };
+                const ansCount =
+                  a.answers && typeof a.answers === 'object' ? Object.keys(a.answers).length : 0;
                 return (
-                  <tr key={a.id}>
+                  <tr key={a.id} onClick={() => setSelectedId(a.id)} style={{ cursor: 'pointer' }}>
                     <td>{a.created_at ? new Date(a.created_at).toLocaleDateString('en-IN') : '—'}</td>
                     <td>
                       <b>{a.full_name}</b>
                       <div style={{ fontSize: '0.76rem', color: 'var(--muted)' }}>{a.email}</div>
-                      {a.phone && (
-                        <div style={{ fontSize: '0.74rem', color: 'var(--muted)' }}>{a.phone}</div>
+                      {(a.phone || a.city) && (
+                        <div style={{ fontSize: '0.74rem', color: 'var(--muted)' }}>
+                          {[a.phone, a.city].filter(Boolean).join(' · ')}
+                        </div>
                       )}
                     </td>
                     <td>
@@ -179,15 +217,21 @@ export default function ApplicationsInbox({ applications, onUpdated }) {
                       </span>
                     </td>
                     <td style={{ maxWidth: '320px' }}>
+                      {ansCount > 0 && (
+                        <div style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--deep)', marginBottom: '4px' }}>
+                          {ansCount} role answer{ansCount > 1 ? 's' : ''} (click to view)
+                        </div>
+                      )}
                       {a.portfolio_url && (
                         <div style={{ marginBottom: a.note ? '4px' : 0 }}>
                           <a
                             href={a.portfolio_url}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
                             style={{ color: 'var(--deep)', fontWeight: 700, textDecoration: 'underline' }}
                           >
-                            Portfolio link ↗
+                            Profile / Portfolio ↗
                           </a>
                         </div>
                       )}
@@ -195,11 +239,11 @@ export default function ApplicationsInbox({ applications, onUpdated }) {
                         <div style={{ fontSize: '0.8rem', color: 'var(--muted)', whiteSpace: 'normal' }}>
                           {a.note}
                         </div>
-                      ) : !a.portfolio_url ? (
+                      ) : !a.portfolio_url && ansCount === 0 ? (
                         '—'
                       ) : null}
                     </td>
-                    <td>
+                    <td onClick={(e) => e.stopPropagation()}>
                       <select
                         aria-label={`Status for ${a.full_name}`}
                         value={a.status}
@@ -229,7 +273,135 @@ export default function ApplicationsInbox({ applications, onUpdated }) {
           </tbody>
         </table>
       </div>
+
+      {selectedApp && (
+        <div
+          className="adm-backdrop"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Application from ${selectedApp.full_name}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedId(null);
+          }}
+        >
+          <div className="adm-drawer">
+            <div className="adm-drawer-head">
+              <div>
+                <h2 style={{ fontSize: '1.15rem', margin: 0 }}>{selectedApp.full_name}</h2>
+                <small style={{ color: 'var(--muted)' }}>
+                  {selectedApp.role} ·{' '}
+                  {selectedApp.created_at
+                    ? new Date(selectedApp.created_at).toLocaleString('en-IN')
+                    : ''}
+                </small>
+              </div>
+              <button
+                type="button"
+                className="close"
+                aria-label="Close application details"
+                onClick={() => setSelectedId(null)}
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="adm-drawer-body">
+              <div className="adm-card glass">
+                <h4>Applicant Details</h4>
+                <div className="adm-kv">
+                  <div>
+                    <small>Email</small>
+                    <b>{selectedApp.email}</b>
+                  </div>
+                  <div>
+                    <small>Phone</small>
+                    <b>{selectedApp.phone || '—'}</b>
+                  </div>
+                  <div>
+                    <small>City</small>
+                    <b>{selectedApp.city || '—'}</b>
+                  </div>
+                  <div>
+                    <small>Status</small>
+                    <select
+                      aria-label="Update applicant status"
+                      value={selectedApp.status}
+                      disabled={updatingId === selectedApp.id}
+                      onChange={(e) => handleStatusChange(selectedApp.id, e.target.value)}
+                      style={{
+                        padding: '6px 10px',
+                        borderRadius: '10px',
+                        border: '1.5px solid #0fb5ad',
+                        fontWeight: 700,
+                        fontSize: '0.8rem',
+                        color: 'var(--deep)',
+                        background: '#fff',
+                      }}
+                    >
+                      {APP_STATUSES.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                {selectedApp.portfolio_url && (
+                  <div style={{ marginTop: '12px' }}>
+                    <a
+                      href={selectedApp.portfolio_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary"
+                      style={{ padding: '8px 14px', fontSize: '0.8rem' }}
+                    >
+                      Open Profile / Portfolio ↗
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              <div className="adm-card glass">
+                <h4>Role-Specific Answers ({selectedApp.role})</h4>
+                {answerEntries.length === 0 ? (
+                  <p style={{ color: 'var(--muted)', fontSize: '0.85rem', margin: 0 }}>
+                    No role-specific answers recorded.
+                  </p>
+                ) : (
+                  <div className="adm-kv">
+                    {answerEntries.map(([key, val]) => (
+                      <div key={key}>
+                        <small>{formatAnswerLabel(key)}</small>
+                        {typeof val === 'string' && /^https?:\/\//i.test(val) ? (
+                          <a
+                            href={val}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: 'var(--deep)', fontWeight: 700, textDecoration: 'underline', wordBreak: 'break-all' }}
+                          >
+                            {val}
+                          </a>
+                        ) : (
+                          <b>{formatAnswerValue(val)}</b>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {selectedApp.note && (
+                <div className="adm-card glass">
+                  <h4>Applicant Note</h4>
+                  <p style={{ fontSize: '0.88rem', lineHeight: 1.55, margin: 0, color: 'var(--deep)' }}>
+                    {selectedApp.note}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
-

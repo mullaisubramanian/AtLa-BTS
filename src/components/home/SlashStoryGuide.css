@@ -1,0 +1,134 @@
+.slash-dock {
+  position: fixed;
+  right: 22px;
+  bottom: 84px;
+  z-index: 48;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  max-width: min(410px, calc(100vw - 32px));
+  animation: slashDockIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes slashDockIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slash-bubble {
+  padding: 14px 16px;
+  border-radius: 22px 22px 6px 22px;
+  border: 1px solid rgba(15, 181, 173, 0.35);
+  box-shadow: 0 18px 42px rgba(4, 56, 54, 0.22);
+  background: rgba(244, 251, 251, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  flex: 1;
+  min-width: 240px;
+}
+
+.slash-bubble-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.slash-bubble-tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #016f75;
+}
+
+.slash-bubble-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.slash-icon-btn {
+  min-width: 34px;
+  min-height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(8, 81, 77, 0.14);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--deep);
+  display: grid;
+  place-items: center;
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.slash-icon-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.slash-icon-btn.is-on {
+  background: var(--tq);
+  border-color: var(--tq);
+  color: #ffffff;
+}
+
+.slash-icon-btn:hover {
+  background: #ffffff;
+  border-color: var(--tq);
+}
+
+.slash-icon-btn.is-on:hover {
+  background: var(--deep);
+}
+
+.slash-bubble-text {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.48;
+  font-weight: 600;
+  color: var(--deep);
+  min-height: 2.6em;
+}
+
+.slash-bubble-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.slash-cta-btn {
+  padding: 9px 14px;
+  font-size: 0.78rem;
+  min-height: 40px;
+}
+
+.slash-dock-avatar {
+  flex: none;
+  filter: drop-shadow(0 8px 18px rgba(4, 56, 54, 0.22));
+}
+
+@media (max-width: 600px) {
+  .slash-dock {
+    right: 12px;
+    left: 12px;
+    bottom: 78px;
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slash-dock {
+    animation: none;
+  }
+}
+

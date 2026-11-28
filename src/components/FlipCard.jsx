@@ -1,6 +1,7 @@
 import './FlipCard.css';
 
 export default function FlipCard({
+  id,
   flipped,
   onFlip,
   color,
@@ -19,6 +20,7 @@ export default function FlipCard({
 
   return (
     <div
+      id={id}
       className={`flip ${flipped ? 'on' : ''} ${className}`.trim()}
       style={{ '--c': color }}
       role="button"

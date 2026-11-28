@@ -7,6 +7,7 @@ import { track } from '../../lib/api';
 import { useModals } from '../../context/ModalContext';
 import { useReducedMotion } from '../../lib/useReducedMotion';
 import RichText from '../RichText';
+import Slash from '../Slash';
 import ResultCard from './ResultCard';
 import PageTile from './PageTile';
 import './ChatMessage.css';
@@ -178,7 +179,7 @@ export default function ChatMessage({ message, onRevealStart, onComplete }) {
   return (
     <div className="msg bot" ref={msgRef}>
       <div className="av">
-        <img src="/logo.png" alt="AtLa/BTS AI" width="36" height="36" loading="lazy" decoding="async" />
+        <Slash size={36} animated={false} loading="lazy" />
       </div>
       <div className="bub">
         {phase === 'thinking' ? (

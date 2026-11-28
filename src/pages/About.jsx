@@ -3,7 +3,6 @@ import Seo from '../components/Seo';
 import Eyebrow from '../components/Eyebrow';
 import Icon from '../components/Icon';
 import Slash from '../components/Slash';
-import CareerForm from '../components/CareerForm';
 import './About.css';
 
 const PRINCIPLES = [
@@ -246,7 +245,7 @@ export default function About() {
         <div className="wrap">
           <div className="about-slash-panel neu">
             <div className="about-slash-avatar">
-              <Slash size={108} />
+              <Slash size={160} />
             </div>
             <div className="about-slash-copy">
               <Eyebrow>Your first point of contact</Eyebrow>
@@ -259,17 +258,21 @@ export default function About() {
           </div>
 
           <div className="about-join-wrap" id="join-team">
-            <div className="sec-head" style={{ marginBottom: '26px' }}>
+            <div className="sec-head" style={{ marginBottom: '18px' }}>
               <Eyebrow>Careers</Eyebrow>
               <h2>
                 Want to be part of <span className="grad">our team?</span>
               </h2>
               <p>
-                We are always glad to meet sharp strategists, designers, engineers and AI builders.
-                Send your details below and Slash will pass them straight to HR.
+                We are always glad to meet sharp strategists, designers, engineers, AI builders and
+                creators. Express your interest on our Team page and Slash will pass it to HR.
               </p>
+              <div style={{ marginTop: '20px' }}>
+                <Link className="btn btn-primary" to="/team#apply">
+                  Apply now →
+                </Link>
+              </div>
             </div>
-            <CareerForm compact />
           </div>
         </div>
       </div>

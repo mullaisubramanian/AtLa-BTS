@@ -51,9 +51,10 @@ export default function Privacy() {
               improve answers. Please do not enter sensitive personal information in the chat.
             </p>
             <p>
-              If you apply to join our team, we collect your name, contact details, role of
-              interest, portfolio link and note, and use them only to review your application. We
-              keep applications for up to 12 months.
+              If you apply to join our team, we collect your name, contact details, city, role of
+              interest and the role-specific details you choose to share (for example portfolio,
+              social profile links or follower range), and use them only to review your application.
+              We keep applications for up to 12 months.
             </p>
             <p>
               When you browse the site, we record basic usage events (for example, pages viewed and

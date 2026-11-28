@@ -53,38 +53,34 @@ export default function SlashPopup({ message: propMessage, open: propOpen, onClo
 
         <div className="slash-popup-body">
           <div className="slash-popup-avatar">
-            <Slash size={72} />
+            <Slash size={120} />
           </div>
 
-          <div className="slash-popup-content">
-            <div className="slash-popup-meta" id="slash-popup-title">
-              <span className="slash-popup-dot" aria-hidden="true" />
-              <span>Slash · AI Success Manager</span>
-            </div>
+          <div className="slash-popup-meta" id="slash-popup-title">
+            SLASH · AI SUCCESS MANAGER
+          </div>
 
-            <div className="slash-popup-msg" aria-live="polite">
-              {typing ? (
-                <span className="slash-typing" aria-label="Slash is typing">
-                  <i />
-                  <i />
-                  <i />
-                </span>
-              ) : (
-                <p>{message}</p>
-              )}
-            </div>
-
-            {!typing && (
-              <div className="slash-popup-actions">
-                <button type="button" className="btn btn-primary slash-ok-btn" onClick={close}>
-                  Got it
-                </button>
-              </div>
+          <div className="slash-popup-msg" aria-live="polite">
+            {typing ? (
+              <span className="slash-typing" aria-label="Slash is typing">
+                <i />
+                <i />
+                <i />
+              </span>
+            ) : (
+              <p className="slash-msg-fade">{message}</p>
             )}
           </div>
+
+          {!typing && (
+            <div className="slash-popup-actions">
+              <button type="button" className="btn btn-primary slash-ok-btn" onClick={close}>
+                Got it
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
-

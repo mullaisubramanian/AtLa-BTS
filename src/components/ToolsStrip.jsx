@@ -1,4 +1,3 @@
-import Eyebrow from './Eyebrow';
 import './ToolsStrip.css';
 
 const TOOLS = [
@@ -20,13 +19,12 @@ export default function ToolsStrip() {
       <div className="wrap">
         <div className="tools-box glass">
           <div className="tools-head">
-            <Eyebrow>Our stack</Eyebrow>
-            <h2 id="tools-heading">Tools &amp; AI platforms we build with</h2>
+            <h2 id="tools-heading">We work with</h2>
           </div>
 
           <ul className="tools-list">
             {TOOLS.map((tool) => (
-              <li key={tool.name} className="tool-item">
+              <li key={tool.name} className="tool-item" tabIndex={0}>
                 <img
                   src={tool.src}
                   alt={tool.name}
@@ -45,4 +43,3 @@ export default function ToolsStrip() {
     </section>
   );
 }
-

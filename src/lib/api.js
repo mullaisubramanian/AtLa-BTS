@@ -248,9 +248,14 @@ export async function submitJobApplication(payload = {}) {
     full_name: cleanString(payload.full_name || ''),
     email: cleanString(payload.email || '').toLowerCase(),
     phone: cleanString(payload.phone || '') || null,
+    city: cleanString(payload.city || '') || null,
     role: cleanString(payload.role || ''),
     portfolio_url: cleanString(payload.portfolio_url || '') || null,
     note: cleanString(payload.note || '') || null,
+    answers:
+      payload.answers && typeof payload.answers === 'object' && !Array.isArray(payload.answers)
+        ? payload.answers
+        : {},
     consent: Boolean(payload.consent),
   };
 

@@ -14,20 +14,23 @@
 .comp-top {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 10px;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
-.comp-logo {
-  width: 30px !important;
-  height: 30px !important;
-  border-radius: 9px !important;
+.comp-top > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.comp-slash {
+  flex: none;
 }
 
 .comp-tag {
-  margin-left: auto;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   color: var(--muted);
   font-weight: 600;
 }
