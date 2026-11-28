@@ -9,7 +9,7 @@
 }
 
 .why .logo-mark {
-  color: var(--tq);
+  color: var(--brand-teal);
 }
 
 .why .logo-mark .ico {
@@ -17,6 +17,7 @@
   height: 22px;
 }
 
+.why h3,
 .why h4 {
   margin: 14px 0 8px;
   font-size: 1.08rem;

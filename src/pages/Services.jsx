@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { countServices } from '../data/practices';
 import { useCatalogue } from '../context/CatalogueContext';
 import { useModals } from '../context/ModalContext';
 import { track } from '../lib/api';
+import Seo from '../components/Seo';
 import Eyebrow from '../components/Eyebrow';
 import Icon from '../components/Icon';
 import FlipCard from '../components/FlipCard';
@@ -35,24 +35,50 @@ export default function Services() {
     });
   };
 
+  const servicesSchema = useMemo(
+    () => ({
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'AtLa/BTS Services & 11 Practices',
+      itemListElement: practices.map((p, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        item: {
+          '@type': 'Service',
+          name: p.title,
+          description: p.tag,
+          url: `https://www.atlabts.com/services#${p.id}`,
+          provider: {
+            '@type': 'ProfessionalService',
+            name: 'AtLa/BTS',
+            url: 'https://www.atlabts.com',
+          },
+        },
+      })),
+    }),
+    [practices]
+  );
+
   return (
     <section className="page-enter">
-      <Helmet>
-        <title>Services — AtLa/BTS</title>
-        <meta property="og:title" content="Services — AtLa/BTS" />
-        <meta
-          name="description"
-          content="Explore all 11 practices and 300+ services across Digital Growth, Websites & E-commerce, AI Search (SEO/AEO/GEO), AI Automation, SaaS/ERP/CRM Platforms, Brand, Personal Branding, Influencer Connect, Data, Consulting and ATLA Academy."
-        />
-      </Helmet>
+      <Seo
+        title="Services — AtLa/BTS | 11 Growth Practices"
+        description="Explore 11 practices and 300+ services across digital growth, web, AI search (SEO/AEO/GEO), AI agents, ERP/CRM, branding, data and ATLA Academy."
+        path="/services"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Services', path: '/services' },
+        ]}
+        extraSchema={servicesSchema}
+      />
 
       <div className="section">
         <div className="wrap">
           <div className="sec-head">
             <Eyebrow>Services</Eyebrow>
-            <h2>
+            <h1>
               Tap a card. <span className="grad">See your future.</span>
-            </h2>
+            </h1>
             <p>
               Each card flips to show the main services in that practice. Tap <b>Explore all</b> to
               see every service and the impact it has on your business.
@@ -151,7 +177,7 @@ export default function Services() {
                         </div>
 
                         <div className="sc-body">
-                          <h3>{p.title}</h3>
+                          <h2>{p.title}</h2>
                           <p>{p.tag}</p>
                           <div className="segchips">
                             {sc.slice(0, 3).map((s) => (

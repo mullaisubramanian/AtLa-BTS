@@ -17,7 +17,7 @@ export default function Footer() {
         <div className="foot glass">
           <div>
             <Link className="brand" to="/" style={{ marginBottom: '14px' }}>
-              <Logo />
+              <Logo lazy />
               <div className="brand-txt">
                 <b>{SITE_CONFIG.brand}</b>
                 <span>{SITE_CONFIG.subtitle}</span>
@@ -30,7 +30,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h5>Practices</h5>
+            <h2 className="foot-heading">Practices</h2>
             <div className="foot-links">
               {practices.map((p) => (
                 <button
@@ -46,7 +46,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h5>Explore</h5>
+            <h2 className="foot-heading">Explore</h2>
             <Link to="/about">About us</Link>
             <Link to="/services">All services</Link>
             <Link to="/service-cocktail">Service Cocktail</Link>
@@ -55,7 +55,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h5>Connect</h5>
+            <h2 className="foot-heading">Connect</h2>
             <Link to="/contact">Contact</Link>
             <a
               className="foot-ig"
@@ -63,19 +63,12 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Icon name="instagram" color="var(--teal)" wrap={false} />
+              <Icon name="instagram" color="var(--brand-teal)" wrap={false} />
               <span>
                 DM us on Instagram · <b>{SITE_CONFIG.instagramHandle}</b>
               </span>
             </a>
             <a href={`mailto:${SITE_CONFIG.email}`}>{SITE_CONFIG.email}</a>
-            {SITE_CONFIG.linkedinUrl ? (
-              <a href={SITE_CONFIG.linkedinUrl} target="_blank" rel="noopener noreferrer">
-                LinkedIn
-              </a>
-            ) : (
-              <Link to="/contact">LinkedIn</Link>
-            )}
           </div>
         </div>
         <p className="copy">
@@ -85,4 +78,3 @@ export default function Footer() {
     </footer>
   );
 }
-

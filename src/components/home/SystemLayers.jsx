@@ -116,7 +116,7 @@ export default function SystemLayers() {
                 >
                   <span className="ln">L{i + 1}</span>
                   <div>
-                    <h4>{l.n} Layer</h4>
+                    <h3>{l.n} Layer</h3>
                     <p>{l.d}</p>
                     <small>{l.k} →</small>
                   </div>

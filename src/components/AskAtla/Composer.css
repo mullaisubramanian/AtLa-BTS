@@ -92,9 +92,10 @@
 
 .sugg button {
   flex: none;
+  min-height: 44px;
   font-size: 0.76rem;
   font-weight: 600;
-  padding: 7px 12px;
+  padding: 7px 14px;
   border-radius: 20px;
   background: #fff;
   color: var(--deep);

@@ -13,12 +13,12 @@ function pickOrbitItems(allServices) {
     }))
     .filter((item) => item.label.length < 34);
 
-  const shuffled = [...candidates]
-    .map((v) => [Math.random(), v])
-    .sort((x, y) => x[0] - y[0])
-    .map((v) => v[1]);
-
-  return shuffled.slice(0, 18);
+  const step = Math.max(1, Math.floor(candidates.length / 18));
+  const picked = [];
+  for (let i = 0; i < candidates.length && picked.length < 18; i += step) {
+    picked.push(candidates[i]);
+  }
+  return picked;
 }
 
 export default function OrbitStage() {

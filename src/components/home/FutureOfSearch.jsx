@@ -19,14 +19,14 @@ export default function FutureOfSearch() {
         <div className="evo">
           <div className="evo-card glass">
             <div className="tag grad">SEO</div>
-            <h4>Search Engine Optimisation</h4>
+            <h3>Search Engine Optimisation</h3>
             <p>
               Rank on Google and Maps when buyers search for what you sell. This is the foundation.
             </p>
           </div>
           <div className="evo-card glass">
             <div className="tag grad">AEO</div>
-            <h4>Answer Engine Optimisation</h4>
+            <h3>Answer Engine Optimisation</h3>
             <p>
               Become the direct answer in Google AI Overviews, featured snippets and voice
               assistants.
@@ -34,7 +34,7 @@ export default function FutureOfSearch() {
           </div>
           <div className="evo-card glass hot">
             <div className="tag">GEO</div>
-            <h4>Generative Engine Optimisation</h4>
+            <h3>Generative Engine Optimisation</h3>
             <p>
               Get named and recommended when someone asks ChatGPT, Gemini or Perplexity for the best
               option.

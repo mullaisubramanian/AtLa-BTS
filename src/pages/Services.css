@@ -235,6 +235,7 @@
   min-height: 0;
 }
 
+.sc-body h2,
 .sc-body h3 {
   font-size: 1.22rem;
   margin-bottom: 6px;

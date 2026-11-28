@@ -178,7 +178,7 @@ export default function ChatMessage({ message, onRevealStart, onComplete }) {
   return (
     <div className="msg bot" ref={msgRef}>
       <div className="av">
-        <img src="/logo.png" alt="AtLa/BTS AI" />
+        <img src="/logo.png" alt="AtLa/BTS AI" width="36" height="36" loading="lazy" decoding="async" />
       </div>
       <div className="bub">
         {phase === 'thinking' ? (

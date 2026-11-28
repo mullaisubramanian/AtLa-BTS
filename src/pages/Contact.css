@@ -11,6 +11,11 @@
   gap: 18px;
 }
 
+.c-info h2,
+.c-info h3 {
+  font-size: 1.17rem;
+}
+
 .c-row {
   display: flex;
   gap: 16px;

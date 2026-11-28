@@ -37,6 +37,7 @@
   background: linear-gradient(135deg, var(--tq2), var(--deep));
 }
 
+.step h3,
 .step h4 {
   font-size: 1.02rem;
   margin-bottom: 3px;

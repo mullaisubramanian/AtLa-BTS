@@ -15,6 +15,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 44px;
   padding: 8px 10px;
   border-radius: 14px;
   background: var(--bg);
@@ -78,6 +79,7 @@
   gap: 16px;
 }
 
+.wiz-panel h2,
 .wiz-panel h3 {
   font-size: 1.25rem;
   margin-bottom: 4px;
@@ -96,6 +98,7 @@
 }
 
 .wiz-chip {
+  min-height: 44px;
   font-size: 0.8rem;
   font-weight: 600;
   padding: 8px 14px;

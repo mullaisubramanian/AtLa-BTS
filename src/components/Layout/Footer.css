@@ -16,7 +16,8 @@
   max-width: 320px;
 }
 
-.foot h5 {
+.foot h5,
+.foot .foot-heading {
   font-family: 'Sora';
   font-size: 0.9rem;
   margin-bottom: 12px;
@@ -24,10 +25,12 @@
 
 .foot a,
 .foot-link-btn {
-  display: block;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
   font-size: 0.85rem;
   color: var(--muted);
-  padding: 3px 0;
+  padding: 6px 0;
   text-align: left;
 }
 

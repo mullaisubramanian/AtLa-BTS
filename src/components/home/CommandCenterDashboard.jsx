@@ -44,9 +44,9 @@ export default function CommandCenterDashboard() {
         <div className="dmain">
           <div className="dtop">
             <div>
-              <b>ATLA Command Center</b>
+              <b>AtLa/BTS Command Center</b>
               <br />
-              Sample client view
+              Illustrative example
             </div>
             <div className="dots" aria-hidden="true">
               <i />

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useCatalogue } from '../context/CatalogueContext';
 import { saveCocktailQuote, track } from '../lib/api';
+import Seo from '../components/Seo';
 import Eyebrow from '../components/Eyebrow';
 import MenuChip from '../components/cocktail/MenuChip';
 import CocktailGlass from '../components/cocktail/CocktailGlass';
@@ -86,22 +86,23 @@ export default function Cocktail() {
 
   return (
     <section className="page-enter">
-      <Helmet>
-        <title>Service Cocktail — AtLa/BTS</title>
-        <meta property="og:title" content="Service Cocktail — AtLa/BTS" />
-        <meta
-          name="description"
-          content="Mix your own custom AtLa/BTS growth recipe. Drag or tap services into the glass to see your custom plan and matching package recommendation."
-        />
-      </Helmet>
+      <Seo
+        title="Service Cocktail — Custom Mix | AtLa/BTS"
+        description="Mix your own custom AtLa/BTS growth recipe. Pick services for your glass, get a tailored package match and request your custom plan today."
+        path="/service-cocktail"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Service Cocktail', path: '/service-cocktail' },
+        ]}
+      />
 
       <div className="section">
         <div className="wrap">
           <div className="sec-head">
             <Eyebrow>Service Cocktail</Eyebrow>
-            <h2>
+            <h1>
               Mix your own <span className="grad">growth recipe</span>
-            </h2>
+            </h1>
             <p>
               Drag services into the glass, or tap them. When your mix is ready, hit{' '}
               <b>Calculate</b> to see your custom plan and matching package recommendation.

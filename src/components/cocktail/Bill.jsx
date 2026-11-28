@@ -84,7 +84,7 @@ export default function Bill({
 
   return (
     <div className="bill glass">
-      <h4>Your cocktail</h4>
+      <h2>Your cocktail</h2>
       <div className="bill-count">
         {items.length
           ? `${items.length} service${items.length > 1 ? 's' : ''} in your glass`

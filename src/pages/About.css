@@ -16,12 +16,15 @@
   padding: 26px;
 }
 
+.mv h2,
 .mv h4 {
+  font-size: 1rem;
   margin-bottom: 8px;
 }
 
+.mv h2 .ico,
 .mv h4 .ico {
-  color: var(--tq);
+  color: var(--brand-teal);
   margin-right: 4px;
 }
 
@@ -48,7 +51,7 @@
   place-items: center;
   background: var(--bg);
   box-shadow: var(--neu-sm);
-  color: var(--tq);
+  color: var(--brand-teal);
   font-size: 1.6rem;
 }
 
@@ -57,6 +60,7 @@
   height: 24px;
 }
 
+.principle h3,
 .principle h4 {
   margin: 10px 0 6px;
   font-size: 1rem;
@@ -84,6 +88,7 @@
   font-weight: 800;
 }
 
+.value h3,
 .value h4 {
   font-size: 0.95rem;
   margin: 6px 0;
@@ -140,7 +145,9 @@
   flex: 1;
 }
 
+.tl h3,
 .tl h4 {
+  font-size: 1rem;
   margin-bottom: 4px;
 }
 

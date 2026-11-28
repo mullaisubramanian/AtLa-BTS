@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+import Seo from '../components/Seo';
 import Eyebrow from '../components/Eyebrow';
 import Hero from '../components/home/Hero';
 import OrbitStage from '../components/AskAtla/OrbitStage';
@@ -14,14 +14,11 @@ import CtaBand from '../components/home/CtaBand';
 export default function Home() {
   return (
     <section className="page-enter">
-      <Helmet>
-        <title>AtLa/BTS — Business Transformation System</title>
-        <meta property="og:title" content="AtLa/BTS — Business Transformation System" />
-        <meta
-          name="description"
-          content="AtLa/BTS — Digital Growth, AI Search (SEO, AEO, GEO), AI Automation, SaaS / ERP / CRM Platforms, Brand Establishment, Personal Branding, Influencer Connect, Data & Intelligence, Transformation Consulting and ATLA Academy."
-        />
-      </Helmet>
+      <Seo
+        title="AtLa/BTS — Business Transformation System"
+        description="AtLa/BTS unites growth marketing, brand, AI search (SEO, AEO, GEO), automation, software platforms and academy training in one measurable system."
+        path="/"
+      />
 
       <Hero />
 

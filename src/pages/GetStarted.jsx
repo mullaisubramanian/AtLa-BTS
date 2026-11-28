@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useCatalogue } from '../context/CatalogueContext';
 import { submitLead, track } from '../lib/api';
@@ -21,6 +20,7 @@ import {
   WIZARD_INDUSTRIES,
   YEARS_IN_BUSINESS,
 } from '../data/options';
+import Seo from '../components/Seo';
 import Eyebrow from '../components/Eyebrow';
 import Icon from '../components/Icon';
 import { PhoneInput, SelectBox } from '../components/FormFields';
@@ -112,29 +112,36 @@ export default function GetStarted() {
   const [searchParams] = useSearchParams();
   const refParam = searchParams.get('ref');
 
-  const [initial] = useState(loadDraft);
-  const [step, setStep] = useState(initial.step);
-  const [form, setForm] = useState(() => ({
-    ...initial.form,
-    phone: stripDefaultIndiaCode(initial.form.phone),
-    preferred_channel:
-      initial.form.preferred_channel === 'whatsapp'
-        ? 'email'
-        : initial.form.preferred_channel || 'email',
-  }));
+  const [step, setStep] = useState(0);
+  const [form, setForm] = useState(INITIAL_DATA);
+  const [draftLoaded, setDraftLoaded] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
   const [stepError, setStepError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submittedLeadId, setSubmittedLeadId] = useState(null);
 
   useEffect(() => {
-    if (submittedLeadId) return;
+    const saved = loadDraft();
+    setStep(saved.step);
+    setForm({
+      ...saved.form,
+      phone: stripDefaultIndiaCode(saved.form.phone),
+      preferred_channel:
+        saved.form.preferred_channel === 'whatsapp'
+          ? 'email'
+          : saved.form.preferred_channel || 'email',
+    });
+    setDraftLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!draftLoaded || submittedLeadId) return;
     try {
       window.localStorage.setItem(DRAFT_KEY, JSON.stringify({ step, form }));
     } catch {
       // ignore storage errors
     }
-  }, [step, form, submittedLeadId]);
+  }, [step, form, submittedLeadId, draftLoaded]);
 
   const update = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -302,17 +309,22 @@ export default function GetStarted() {
     const refCode = String(submittedLeadId).slice(0, 8).toUpperCase();
     return (
       <section className="page-enter">
-        <Helmet>
-          <title>Get your free growth audit — AtLa/BTS</title>
-          <meta property="og:title" content="Get your free growth audit — AtLa/BTS" />
-        </Helmet>
+        <Seo
+          title="Get Started: Free Growth Audit — AtLa/BTS"
+          description="Complete a 2-minute business profile to receive your free AtLa/BTS 360° digital, website, AI-search and automation mini growth audit."
+          path="/get-started"
+          breadcrumbs={[
+            { name: 'Home', path: '/' },
+            { name: 'Get Started', path: '/get-started' },
+          ]}
+        />
         <div className="section">
           <div className="wrap">
             <div className="wiz-card glass wiz-success">
               <div className="qe-check">
                 <Icon name="check" color="#fff" wrap={false} />
               </div>
-              <h2>We&apos;ll reply within one business day</h2>
+              <h1>We&apos;ll reply within one business day</h1>
               <p>
                 Your business profile and free audit request are saved. Reference number:{' '}
                 <strong className="qe-ref">{refCode}</strong>
@@ -342,22 +354,23 @@ export default function GetStarted() {
 
   return (
     <section className="page-enter">
-      <Helmet>
-        <title>Get your free growth audit — AtLa/BTS</title>
-        <meta property="og:title" content="Get your free growth audit — AtLa/BTS" />
-        <meta
-          name="description"
-          content="Complete a 2-minute business profile to receive your free AtLa/BTS 360° digital, website, AI-search and automation mini audit."
-        />
-      </Helmet>
+      <Seo
+        title="Get Started: Free Growth Audit — AtLa/BTS"
+        description="Complete a 2-minute business profile to receive your free AtLa/BTS 360° digital, website, AI-search and automation mini growth audit."
+        path="/get-started"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Get Started', path: '/get-started' },
+        ]}
+      />
 
       <div className="section">
         <div className="wrap">
           <div className="sec-head">
             <Eyebrow>Get Started</Eyebrow>
-            <h2>
+            <h1>
               Get your <span className="grad">free growth audit</span>
-            </h2>
+            </h1>
             <p>
               Tell us about your business in five quick steps. Your answers are auto-saved so you
               won&apos;t lose progress, and we&apos;ll prepare a custom audit before our call.
@@ -392,7 +405,7 @@ export default function GetStarted() {
 
             {step === 0 && (
               <div className="wiz-panel">
-                <h3>Step 1 · About you</h3>
+                <h2>Step 1 · About you</h2>
                 <div className="form-grid">
                   <div className={`field ${fieldErrors.full_name ? 'is-error' : ''}`}>
                     <label htmlFor="gs-name">
@@ -471,7 +484,7 @@ export default function GetStarted() {
 
             {step === 1 && (
               <div className="wiz-panel">
-                <h3>Step 2 · Your business</h3>
+                <h2>Step 2 · Your business</h2>
                 <div className="form-grid">
                   <div className={`field ${fieldErrors.company_name ? 'is-error' : ''}`}>
                     <label htmlFor="gs-co">
@@ -614,7 +627,7 @@ export default function GetStarted() {
 
             {step === 2 && (
               <div className="wiz-panel">
-                <h3>Step 3 · Online presence</h3>
+                <h2>Step 3 · Online presence</h2>
                 <label className="check">
                   <input
                     type="checkbox"
@@ -786,7 +799,7 @@ export default function GetStarted() {
 
             {step === 3 && (
               <div className="wiz-panel">
-                <h3>Step 4 · Goals &amp; current setup</h3>
+                <h2>Step 4 · Goals &amp; current setup</h2>
                 <div className="field">
                   <label>Primary goals (choose up to 3)</label>
                   <div className="wiz-chips">
@@ -935,7 +948,7 @@ export default function GetStarted() {
 
             {step === 4 && (
               <div className="wiz-panel">
-                <h3>Step 5 · What you need</h3>
+                <h2>Step 5 · What you need</h2>
                 <div className="field">
                   <label>Interested practices</label>
                   <div className="wiz-chips">
@@ -1061,7 +1074,7 @@ export default function GetStarted() {
 
             {step === 5 && (
               <div className="wiz-panel">
-                <h3>Review your profile</h3>
+                <h2>Review your profile</h2>
                 <div className="wiz-review">
                   <div className="wiz-rev-card neu">
                     <div className="wiz-rev-head">

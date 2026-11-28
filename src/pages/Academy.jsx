@@ -1,5 +1,5 @@
-import { Helmet } from 'react-helmet-async';
 import { useModals } from '../context/ModalContext';
+import Seo from '../components/Seo';
 import Eyebrow from '../components/Eyebrow';
 import './Academy.css';
 
@@ -83,22 +83,23 @@ export default function Academy() {
 
   return (
     <section className="page-enter">
-      <Helmet>
-        <title>ATLA Academy — AtLa/BTS</title>
-        <meta property="og:title" content="ATLA Academy — AtLa/BTS" />
-        <meta
-          name="description"
-          content="Hands-on programmes in AI, digital growth, automation and branding for individuals, corporate teams, students and institutions."
-        />
-      </Helmet>
+      <Seo
+        title="ATLA Academy — AI & Growth | AtLa/BTS"
+        description="Hands-on AtLa/BTS programmes in AI, digital growth, automation and personal branding for teams, corporate leaders, students and institutions."
+        path="/academy"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'ATLA Academy', path: '/academy' },
+        ]}
+      />
 
       <div className="section">
         <div className="wrap">
           <div className="sec-head">
             <Eyebrow>ATLA Academy</Eyebrow>
-            <h2>
+            <h1>
               Learn what we do. <span className="grad">Lead what&apos;s next.</span>
-            </h2>
+            </h1>
             <p>
               Hands-on programmes in AI, digital growth, automation and branding for individuals,
               corporate teams, students and institutions. Taught by the people who do the work
@@ -110,7 +111,7 @@ export default function Academy() {
             {TRACKS.map((trk) => (
               <div key={trk.title} className="trk neu">
                 <div className="lvl">{trk.level}</div>
-                <h3>{trk.title}</h3>
+                <h2>{trk.title}</h2>
                 <ul>
                   {trk.items.map((item) => (
                     <li key={item}>{item}</li>

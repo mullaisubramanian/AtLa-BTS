@@ -31,7 +31,7 @@ const REASONS = [
   [
     'lock',
     'Responsible by design',
-    'DPDP-aware data handling, ASCI-compliant influencer work and ethical AI in every engagement.',
+    'Privacy-conscious data handling, ASCI-compliant influencer work and ethical AI in every engagement.',
   ],
 ];
 
@@ -52,7 +52,7 @@ export default function WhyUs() {
               <div className="logo-mark">
                 <Icon name={icon} />
               </div>
-              <h4>{title}</h4>
+              <h3>{title}</h3>
               <p>{desc}</p>
             </div>
           ))}

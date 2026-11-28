@@ -161,7 +161,7 @@ export default function FiveDLoop() {
               <div key={s.code} className="step glass">
                 <div className="num">{s.code}</div>
                 <div>
-                  <h4>{s.title}</h4>
+                  <h3>{s.title}</h3>
                   <p>{s.desc}</p>
                 </div>
               </div>

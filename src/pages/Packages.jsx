@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { SITE_CONFIG } from '../config/site';
 import { useCatalogue } from '../context/CatalogueContext';
 import { track } from '../lib/api';
+import Seo from '../components/Seo';
 import Eyebrow from '../components/Eyebrow';
 import Icon from '../components/Icon';
 import FlipCard from '../components/FlipCard';
@@ -22,22 +22,23 @@ export default function Packages() {
 
   return (
     <section className="page-enter">
-      <Helmet>
-        <title>Packages — AtLa/BTS</title>
-        <meta property="og:title" content="Packages — AtLa/BTS" />
-        <meta
-          name="description"
-          content="Choose from Good, Great, Fantastic or Super monthly growth packages from AtLa/BTS — each including everything in the level below it."
-        />
-      </Helmet>
+      <Seo
+        title="Growth Packages: Good to Super — AtLa/BTS"
+        description="Compare Good, Great, Fantastic and Super custom growth packages from AtLa/BTS — each tier builds on the level below with clear, custom pricing."
+        path="/packages"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Packages', path: '/packages' },
+        ]}
+      />
 
       <div className="section">
         <div className="wrap">
           <div className="sec-head">
             <Eyebrow>Growth Packages</Eyebrow>
-            <h2>
+            <h1>
               Four levels. <span className="grad">One direction: up.</span>
-            </h2>
+            </h1>
             <p>
               Tap a package to flip it and see what&apos;s included. Each level includes everything
               in the level below it.
@@ -74,7 +75,7 @@ export default function Packages() {
                           </span>
                         )}
                         <span className="tier">{p.tier}</span>
-                        <h3>{p.name}</h3>
+                        <h2>{p.name}</h2>
                         <div className="motto">{p.motto}</div>
                         <div className="price">Custom pricing</div>
                       </div>

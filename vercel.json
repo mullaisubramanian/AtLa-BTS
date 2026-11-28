@@ -1,1 +1,13 @@
-{"rewrites":[{"source":"/((?!assets/|.*\\..*).*)","destination":"/index.html"}]}
+{
+  "rewrites": [
+    { "source": "/about", "destination": "/about/index.html" },
+    { "source": "/services", "destination": "/services/index.html" },
+    { "source": "/service-cocktail", "destination": "/service-cocktail/index.html" },
+    { "source": "/packages", "destination": "/packages/index.html" },
+    { "source": "/academy", "destination": "/academy/index.html" },
+    { "source": "/contact", "destination": "/contact/index.html" },
+    { "source": "/get-started", "destination": "/get-started/index.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/admin/:path*", "destination": "/admin.html" }
+  ]
+}

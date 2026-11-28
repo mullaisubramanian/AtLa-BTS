@@ -11,17 +11,17 @@ import QuickEnquiryModal from './components/QuickEnquiryModal';
 import { track } from './lib/api';
 import { initTracking } from './lib/session';
 import Home from './pages/Home';
+import About from './pages/About';
+import Services from './pages/Services';
+import Cocktail from './pages/Cocktail';
+import Packages from './pages/Packages';
+import Academy from './pages/Academy';
+import Contact from './pages/Contact';
+import GetStarted from './pages/GetStarted';
+import NotFound from './pages/NotFound';
 
-const About = lazy(() => import('./pages/About'));
-const Services = lazy(() => import('./pages/Services'));
-const Cocktail = lazy(() => import('./pages/Cocktail'));
-const Packages = lazy(() => import('./pages/Packages'));
-const Academy = lazy(() => import('./pages/Academy'));
-const Contact = lazy(() => import('./pages/Contact'));
-const GetStarted = lazy(() => import('./pages/GetStarted'));
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
-const NotFound = lazy(() => import('./pages/NotFound'));
 
 function ScrollAndTrackManager() {
   const { pathname, hash } = useLocation();
@@ -83,27 +83,17 @@ export default function App() {
       <BackgroundBlobs />
       <Header />
       <main>
-        <Suspense
-          fallback={
-            <div className="section">
-              <div className="wrap" style={{ textAlign: 'center', color: 'var(--muted)' }}>
-                Loading…
-              </div>
-            </div>
-          }
-        >
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/service-cocktail" element={<Cocktail />} />
-            <Route path="/packages" element={<Packages />} />
-            <Route path="/academy" element={<Academy />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/get-started" element={<GetStarted />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/service-cocktail" element={<Cocktail />} />
+          <Route path="/packages" element={<Packages />} />
+          <Route path="/academy" element={<Academy />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/get-started" element={<GetStarted />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </main>
       <Footer />
       <FloatingTalkButton />

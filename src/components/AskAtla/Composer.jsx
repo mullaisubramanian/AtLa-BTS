@@ -8,13 +8,12 @@ import './Composer.css';
 export default function Composer() {
   const { askAtla } = useModals();
   const [value, setValue] = useState('');
-  const [isNarrow, setIsNarrow] = useState(
-    typeof window !== 'undefined' ? window.innerWidth < 700 : false
-  );
+  const [isNarrow, setIsNarrow] = useState(false);
   const textareaRef = useRef(null);
 
   useEffect(() => {
     const onResize = () => setIsNarrow(window.innerWidth < 700);
+    onResize();
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);

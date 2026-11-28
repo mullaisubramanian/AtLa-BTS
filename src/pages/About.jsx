@@ -1,5 +1,5 @@
-import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import Seo from '../components/Seo';
 import Eyebrow from '../components/Eyebrow';
 import Icon from '../components/Icon';
 import './About.css';
@@ -29,7 +29,7 @@ const PRINCIPLES = [
 
 const VALUES = [
   ['A', 'Ambition', 'We aim for category leadership, not just presence.'],
-  ['T', 'Trust', 'Transparent pricing, honest reporting, no vanity metrics.'],
+  ['T', 'Trust', 'Clear, custom pricing, honest reporting, no vanity metrics.'],
   ['L', 'Learning', 'We teach what we do, so your capability grows with you.'],
   ['A', 'Automation', 'Machines do the repetitive work; people do the creative work.'],
   ['+', 'Impact', "If it doesn't move a business metric, we don't do it."],
@@ -68,14 +68,15 @@ const BARS = [70, 120, 170, 230, 290];
 export default function About() {
   return (
     <section className="page-enter">
-      <Helmet>
-        <title>About AtLa/BTS — Business Transformation System</title>
-        <meta property="og:title" content="About AtLa/BTS — Business Transformation System" />
-        <meta
-          name="description"
-          content="Learn how AtLa/BTS replaces luck with a repeatable, measurable 6-layer Business Transformation System for startups, SMEs, enterprises and institutions."
-        />
-      </Helmet>
+      <Seo
+        title="About AtLa/BTS — Business Transformation System"
+        description="See how AtLa/BTS replaces guesswork with a repeatable 6-layer, 5D Business Transformation System for startups, SMEs, enterprises & institutions."
+        path="/about"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'About', path: '/about' },
+        ]}
+      />
 
       <div className="section">
         <div className="wrap about-hero">
@@ -92,18 +93,18 @@ export default function About() {
             </p>
             <div className="mv">
               <div className="glass">
-                <h4>
+                <h2>
                   <Icon name="eye" /> Our Vision
-                </h4>
+                </h2>
                 <p>
                   A world where every ambitious business, new or established, has access to
                   enterprise-grade brand, technology and AI.
                 </p>
               </div>
               <div className="glass">
-                <h4>
+                <h2>
                   <Icon name="rocket" /> Our Mission
-                </h4>
+                </h2>
                 <p>
                   To design, build and run the growth systems that make our clients more visible,
                   more efficient and more valuable every quarter.
@@ -181,7 +182,7 @@ export default function About() {
                 <div className="em">
                   <Icon name={icon} />
                 </div>
-                <h4>{title}</h4>
+                <h3>{title}</h3>
                 <p>{desc}</p>
               </div>
             ))}
@@ -208,7 +209,7 @@ export default function About() {
             {VALUES.map(([letter, title, desc]) => (
               <div key={title} className="value neu">
                 <div className="big grad">{letter}</div>
-                <h4>{title}</h4>
+                <h3>{title}</h3>
                 <p>{desc}</p>
               </div>
             ))}
@@ -230,7 +231,7 @@ export default function About() {
               <div key={num} className="tl">
                 <div className="n">{num}</div>
                 <div className="glass">
-                  <h4>{title}</h4>
+                  <h3>{title}</h3>
                   <p>{desc}</p>
                 </div>
               </div>

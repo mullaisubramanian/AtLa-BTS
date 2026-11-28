@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { SITE_CONFIG } from '../config/site';
 import { submitLead } from '../lib/api';
@@ -7,6 +6,7 @@ import { useCatalogue } from '../context/CatalogueContext';
 import { useContactPrefill } from '../context/ContactPrefillContext';
 import { useModals } from '../context/ModalContext';
 import { BUDGET_RANGES, BUSINESS_STAGES } from '../data/options';
+import Seo from '../components/Seo';
 import Eyebrow from '../components/Eyebrow';
 import Icon from '../components/Icon';
 import { PhoneInput, SelectBox } from '../components/FormFields';
@@ -149,28 +149,29 @@ export default function Contact() {
 
   return (
     <section className="page-enter">
-      <Helmet>
-        <title>Talk to us — AtLa/BTS</title>
-        <meta property="og:title" content="Talk to us — AtLa/BTS" />
-        <meta
-          name="description"
-          content="Connect with AtLa/BTS for a free 30-minute transformation session and receive a mini audit of your social media, website, AI-search visibility and automation opportunities."
-        />
-      </Helmet>
+      <Seo
+        title="Contact AtLa/BTS — Talk to Strategists"
+        description="Connect directly with AtLa/BTS strategists via Instagram (@atla_bts) or our enquiry form for a free growth session and mini digital audit."
+        path="/contact"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Contact', path: '/contact' },
+        ]}
+      />
 
       <div className="section">
         <div className="wrap">
           <div className="sec-head">
             <Eyebrow>Talk to us</Eyebrow>
-            <h2>
+            <h1>
               Let&apos;s design your <span className="grad">next chapter</span>
-            </h2>
+            </h1>
             <p>Tell us where you are and where you want to be. We reply within one business day.</p>
           </div>
 
           <div className="contact-grid">
             <div className="c-info neu">
-              <h3>Direct line to the team</h3>
+              <h2>Direct line to the team</h2>
               <p style={{ color: 'var(--muted)', fontSize: '0.92rem' }}>
                 No sales scripts. You speak directly with a strategist.
               </p>

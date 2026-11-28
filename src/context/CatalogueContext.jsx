@@ -64,7 +64,7 @@ function writeCache(data) {
 const CatalogueContext = createContext(null);
 
 export function CatalogueProvider({ children }) {
-  const [catalogue, setCatalogue] = useState(() => readCache() || getFallbackCatalogue());
+  const [catalogue, setCatalogue] = useState(() => getFallbackCatalogue());
   const [loading, setLoading] = useState(false);
 
   const loadFromSupabase = useCallback(async (force = false) => {

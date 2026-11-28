@@ -91,6 +91,7 @@
   background: rgba(255, 255, 255, 0.14);
 }
 
+.pkg h2,
 .pkg h3 {
   font-size: 2rem;
   margin: 16px 0 2px;
@@ -189,6 +190,7 @@
     linear-gradient(150deg, #0a2b2a, #05403d 50%, #021a1a);
 }
 
+.pkg.top .pk-hero h2,
 .pkg.top .pk-hero h3,
 .pkg.top .pk-hero .price {
   background: linear-gradient(120deg, #fde68a, #f5c451, #d4a017);

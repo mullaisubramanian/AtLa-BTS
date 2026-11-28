@@ -1,5 +1,5 @@
 import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import { createRoot, hydrateRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 
@@ -23,7 +23,8 @@ if ('scrollRestoration' in history) {
   history.scrollRestoration = 'manual';
 }
 
-createRoot(document.getElementById('root')).render(
+const rootEl = document.getElementById('root');
+const appTree = (
   <StrictMode>
     <HelmetProvider>
       <BrowserRouter>
@@ -38,4 +39,13 @@ createRoot(document.getElementById('root')).render(
     </HelmetProvider>
   </StrictMode>
 );
+
+if (
+  rootEl.hasChildNodes() &&
+  !window.location.pathname.startsWith('/admin')
+) {
+  hydrateRoot(rootEl, appTree);
+} else {
+  createRoot(rootEl).render(appTree);
+}
 
