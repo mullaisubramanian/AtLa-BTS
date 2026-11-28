@@ -65,3 +65,4 @@ for (const route of [...PUBLIC_ROUTES, '/404']) {
   injectRouteHtml(route, appHtml, helmet);
   console.log(`Pre-rendered ${route}`);
 }
+
