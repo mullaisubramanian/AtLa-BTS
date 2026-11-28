@@ -69,6 +69,8 @@ export default function Footer() {
               </span>
             </a>
             <a href={`mailto:${SITE_CONFIG.email}`}>{SITE_CONFIG.email}</a>
+            <Link to="/privacy">Privacy Policy</Link>
+            <Link to="/terms">Terms of Use</Link>
           </div>
         </div>
         <p className="copy">

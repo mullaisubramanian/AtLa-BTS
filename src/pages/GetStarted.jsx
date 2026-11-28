@@ -1061,8 +1061,16 @@ export default function GetStarted() {
                       onChange={(e) => update('consent', e.target.checked)}
                     />
                     <span>
-                      I agree to be contacted by AtLa/BTS about my enquiry.{' '}
-                      <span className="req" aria-hidden="true">*</span>
+                      I agree to be contacted by AtLa/BTS about my enquiry and accept the{' '}
+                      <a
+                        href="/privacy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Privacy Policy
+                      </a>
+                      . <span className="req" aria-hidden="true">*</span>
                     </span>
                   </label>
                   {fieldErrors.consent && (
@@ -1186,6 +1194,15 @@ export default function GetStarted() {
                 </button>
               )}
             </div>
+            {step === 5 && (
+              <p className="form-privacy-note" style={{ marginTop: '12px' }}>
+                We use your details only to reply to your enquiry. See our{' '}
+                <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                  Privacy Policy
+                </a>
+                .
+              </p>
+            )}
           </div>
         </div>
       </div>

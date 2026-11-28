@@ -16,6 +16,8 @@ const PUBLIC_ROUTES = [
   '/academy',
   '/contact',
   '/get-started',
+  '/privacy',
+  '/terms',
 ];
 
 const template = fs.readFileSync(path.join(distDir, 'index.html'), 'utf8');
