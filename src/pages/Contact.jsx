@@ -9,6 +9,7 @@ import { BUDGET_RANGES, BUSINESS_STAGES } from '../data/options';
 import Seo from '../components/Seo';
 import Eyebrow from '../components/Eyebrow';
 import Icon from '../components/Icon';
+import LocationsSection from '../components/LocationsSection';
 import { PhoneInput, SelectBox } from '../components/FormFields';
 import { formatPhoneForSubmit, validatePhoneInput } from '../lib/phone';
 import './Contact.css';
@@ -30,7 +31,7 @@ const INITIAL_FORM = {
 export default function Contact() {
   const { practices, packages } = useCatalogue();
   const { prefill, clearContactPrefill } = useContactPrefill();
-  const { showToast } = useModals();
+  const { showSlashPopup } = useModals();
   const [form, setForm] = useState(INITIAL_FORM);
   const [fieldErrors, setFieldErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -81,7 +82,10 @@ export default function Contact() {
     setErrorMsg('');
 
     if (form.honeypot.trim()) {
-      showToast('Thank you! We will get back to you within one business day.');
+      const firstName = form.name.trim().split(/\s+/)[0] || 'there';
+      showSlashPopup(
+        `Hey ${firstName}, I got your request. I will arrange a specialist from our team to connect with you shortly.`
+      );
       setForm(INITIAL_FORM);
       setFieldErrors({});
       return;
@@ -109,7 +113,7 @@ export default function Contact() {
     setSubmitting(true);
     const isCocktail = form.packageId === 'custom_cocktail';
     const isProject = form.packageId === 'project';
-    const { data, error } = await submitLead({
+    const { error } = await submitLead({
       contact: {
         full_name: form.name,
         phone: formattedPhone,
@@ -141,10 +145,12 @@ export default function Contact() {
       return;
     }
 
-    const ref = data ? ` (Ref: ${String(data).slice(0, 8).toUpperCase()})` : '';
-    showToast(`Thank you! We will get back to you within one business day.${ref}`);
+    const firstName = form.name.trim().split(/\s+/)[0] || 'there';
     setForm(INITIAL_FORM);
     clearContactPrefill();
+    showSlashPopup(
+      `Hey ${firstName}, I got your request. I will arrange a specialist from our team to connect with you shortly.`
+    );
   };
 
   return (
@@ -472,6 +478,8 @@ export default function Contact() {
           </div>
         </div>
       </div>
+
+      <LocationsSection />
     </section>
   );
 }

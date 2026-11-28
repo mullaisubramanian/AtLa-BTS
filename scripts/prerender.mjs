@@ -16,6 +16,7 @@ const PUBLIC_ROUTES = [
   '/academy',
   '/contact',
   '/get-started',
+  '/careers',
   '/privacy',
   '/terms',
 ];

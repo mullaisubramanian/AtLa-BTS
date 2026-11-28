@@ -1,0 +1,161 @@
+.locations-sec {
+  padding-top: 20px;
+}
+
+.loc-grid {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.loc-card {
+  padding: 22px 24px 18px;
+  border-radius: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.loc-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.loc-card-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: var(--deep);
+}
+
+.loc-card-sub {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.loc-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.loc-svg-india {
+  max-height: 360px;
+}
+
+.loc-world-base path {
+  fill: rgba(255, 255, 255, 0.75);
+  stroke: rgba(8, 81, 77, 0.24);
+  stroke-width: 0.85;
+  stroke-linejoin: round;
+}
+
+.loc-india-highlight path {
+  fill: #cbf5f3;
+  stroke: #018087;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.loc-india-detail path {
+  fill: rgba(203, 245, 243, 0.65);
+  stroke: #018087;
+  stroke-width: 1.65;
+  stroke-linejoin: round;
+}
+
+.loc-pin-pulse {
+  fill: rgba(15, 181, 173, 0.28);
+  animation: locPulse 2.6s ease-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.loc-pin.is-home .loc-pin-pulse {
+  fill: rgba(8, 81, 77, 0.25);
+}
+
+.loc-pin-dot {
+  fill: #0fb5ad;
+  stroke: #ffffff;
+  stroke-width: 1.8;
+}
+
+.loc-pin.is-home .loc-pin-dot {
+  fill: #08514d;
+}
+
+.loc-pin-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  fill: #08514d;
+  paint-order: stroke;
+  stroke: rgba(244, 251, 251, 0.94);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+}
+
+.loc-pin-sub {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  fill: #016f75;
+  paint-order: stroke;
+  stroke: rgba(244, 251, 251, 0.94);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.loc-svg-world .loc-pin-label {
+  font-size: 10.5px;
+}
+
+.loc-svg-world .loc-pin-sub {
+  font-size: 9px;
+}
+
+.loc-summary {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: var(--deep);
+}
+
+@keyframes locPulse {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.75);
+  }
+  70% {
+    opacity: 0.15;
+    transform: scale(1.65);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+@media (max-width: 920px) {
+  .loc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .loc-svg-india {
+    max-height: 340px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loc-pin-pulse {
+    animation: none;
+  }
+}
+

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useCatalogue } from '../context/CatalogueContext';
+import { useModals } from '../context/ModalContext';
 import { submitLead, track } from '../lib/api';
 import { SITE_CONFIG } from '../config/site';
 import {
@@ -109,6 +110,7 @@ function loadDraft() {
 
 export default function GetStarted() {
   const { practices, packages } = useCatalogue();
+  const { showSlashPopup } = useModals();
   const [searchParams] = useSearchParams();
   const refParam = searchParams.get('ref');
 
@@ -301,8 +303,12 @@ export default function GetStarted() {
     } catch {
       // ignore
     }
+    const firstName = form.full_name.trim().split(/\s+/)[0] || 'there';
     setSubmittedLeadId(data || `ATLA${Date.now().toString(36).toUpperCase()}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    showSlashPopup(
+      `Hey ${firstName}, I got your request. I will arrange a specialist from our team to connect with you shortly.`
+    );
   };
 
   if (submittedLeadId) {

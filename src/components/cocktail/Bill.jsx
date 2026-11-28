@@ -1,7 +1,5 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { SITE_CONFIG } from '../../config/site';
-import { track } from '../../lib/api';
 import { useCatalogue } from '../../context/CatalogueContext';
 import { useModals } from '../../context/ModalContext';
 import Icon from '../Icon';
@@ -176,21 +174,27 @@ export default function Bill({
           >
             See {tipInfo.best.name} →
           </Link>{' '}
-          <a
+          <button
+            type="button"
             className="btn btn-neu"
             style={{ marginTop: '10px', padding: '9px 16px', fontSize: '.8rem' }}
-            href={SITE_CONFIG.instagramUrl}
-            target="_blank"
-            rel="noopener noreferrer"
             onClick={() =>
-              track('negotiate_click', {
+              openQuickEnquiry({
                 source: 'package_negotiate',
-                package_id: tipInfo.best.id,
+                title: "Let's negotiate",
+                packageId: tipInfo.best.id,
+                packageName: tipInfo.best.name,
+                packageColor: tipInfo.best.color,
+                cocktailItems: items,
+                isCustomCocktail: true,
+                cocktailQuoteId: quoteResult?.quote_id || null,
+                interests: uniqueInterests,
+                defaultMessage: `Let's negotiate the ${tipInfo.best.name} package with my Service Cocktail:\n${items.map((m) => `• ${m.n}`).join('\n')}`,
               })
             }
           >
             Let&apos;s negotiate →
-          </a>
+          </button>
         </div>
       )}
 
@@ -207,19 +211,23 @@ export default function Bill({
           >
             Serve it to me →
           </button>
-          <a
+          <button
+            type="button"
             className="btn btn-primary neg-row"
-            href={SITE_CONFIG.instagramUrl}
-            target="_blank"
-            rel="noopener noreferrer"
             onClick={() =>
-              track('negotiate_click', {
+              openQuickEnquiry({
                 source: 'cocktail_negotiate',
+                title: "Let's negotiate",
+                cocktailItems: items,
+                isCustomCocktail: true,
+                cocktailQuoteId: quoteResult?.quote_id || null,
+                interests: uniqueInterests,
+                defaultMessage: `Let's negotiate my Service Cocktail:\n${items.map((m) => `• ${m.n}`).join('\n')}`,
               })
             }
           >
             Let&apos;s negotiate →
-          </a>
+          </button>
         </div>
       )}
     </div>

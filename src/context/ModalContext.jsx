@@ -27,6 +27,11 @@ export function ModalProvider({ children }) {
   const [toastMsg, setToastMsg] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
 
+  const [slashPopup, setSlashPopup] = useState({
+    open: false,
+    message: '',
+  });
+
   const openPractice = useCallback((practiceId, segmentName = null) => {
     setPracticeModal({ open: true, practiceId, segmentName });
     track('practice_open', { practiceId, segmentName });
@@ -164,6 +169,14 @@ export function ModalProvider({ children }) {
     }, 3200);
   }, []);
 
+  const showSlashPopup = useCallback((message) => {
+    setSlashPopup({ open: true, message: String(message || '').trim() });
+  }, []);
+
+  const closeSlashPopup = useCallback(() => {
+    setSlashPopup((prev) => ({ ...prev, open: false }));
+  }, []);
+
   return (
     <ModalContext.Provider
       value={{
@@ -186,6 +199,9 @@ export function ModalProvider({ children }) {
         toastMsg,
         toastVisible,
         showToast,
+        slashPopup,
+        showSlashPopup,
+        closeSlashPopup,
       }}
     >
       {children}

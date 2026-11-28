@@ -9,7 +9,9 @@ import PracticesGrid from '../components/home/PracticesGrid';
 import FiveDLoop from '../components/home/FiveDLoop';
 import FutureOfSearch from '../components/home/FutureOfSearch';
 import WhyUs from '../components/home/WhyUs';
+import ToolsStrip from '../components/ToolsStrip';
 import CtaBand from '../components/home/CtaBand';
+import LocationsSection from '../components/LocationsSection';
 
 export default function Home() {
   return (
@@ -45,7 +47,9 @@ export default function Home() {
       <FiveDLoop />
       <FutureOfSearch />
       <WhyUs />
+      <ToolsStrip />
       <CtaBand />
+      <LocationsSection />
     </section>
   );
 }

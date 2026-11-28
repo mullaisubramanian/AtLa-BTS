@@ -1,27 +1,24 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useModals } from '../context/ModalContext';
 import { useFocusTrap } from '../lib/useFocusTrap';
 import { submitLead } from '../lib/api';
-import { SITE_CONFIG } from '../config/site';
 import {
   ACADEMY_TRACKS,
   BUDGET_RANGES,
   BUSINESS_STAGES,
 } from '../data/options';
-import Icon from './Icon';
 import { PhoneInput, SelectBox } from './FormFields';
 import { formatPhoneForSubmit, isValidTenDigitPhone, validatePhoneInput } from '../lib/phone';
 import './QuickEnquiryModal.css';
 
 function validateEmail(raw) {
   const cleaned = String(raw || '').trim();
-  if (!cleaned) return '';
+  if (!cleaned) return 'Email is required';
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleaned) ? '' : 'Enter a valid email address';
 }
 
 export default function QuickEnquiryModal() {
-  const { quickEnquiry, closeQuickEnquiry } = useModals();
+  const { quickEnquiry, closeQuickEnquiry, showSlashPopup } = useModals();
   const { open } = quickEnquiry;
   const trapRef = useFocusTrap(open, closeQuickEnquiry);
 
@@ -37,7 +34,6 @@ export default function QuickEnquiryModal() {
   const [honeypot, setHoneypot] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [submittedLeadId, setSubmittedLeadId] = useState(null);
 
   useEffect(() => {
     if (!open) return;
@@ -54,7 +50,6 @@ export default function QuickEnquiryModal() {
     setFieldErrors({});
     setErrorMsg('');
     setSubmitting(false);
-    setSubmittedLeadId(null);
   }, [open, quickEnquiry]);
 
   const [fieldErrors, setFieldErrors] = useState({});
@@ -71,6 +66,8 @@ export default function QuickEnquiryModal() {
   const isServeMode = quickEnquiry.source === 'cocktail_serve';
   const isServeReady =
     Boolean(fullName.trim()) &&
+    Boolean(email.trim()) &&
+    !validateEmail(email) &&
     (!phone.trim() || isValidTenDigitPhone(phone)) &&
     Boolean(consent);
 
@@ -94,7 +91,11 @@ export default function QuickEnquiryModal() {
     setErrorMsg('');
 
     if (honeypot.trim()) {
-      setSubmittedLeadId('00000000-honeypot');
+      const firstName = fullName.trim().split(/\s+/)[0] || 'there';
+      closeQuickEnquiry();
+      showSlashPopup(
+        `Hey ${firstName}, I got your request. I will arrange a specialist from our team to connect with you shortly.`
+      );
       return;
     }
 
@@ -112,7 +113,7 @@ export default function QuickEnquiryModal() {
 
     const formattedPhone = phone.trim() ? formatPhoneForSubmit(phone) : '';
     setSubmitting(true);
-    const { data, error } = await submitLead({
+    const { error } = await submitLead({
       contact: {
         full_name: fullName,
         phone: formattedPhone,
@@ -148,10 +149,12 @@ export default function QuickEnquiryModal() {
       return;
     }
 
-    setSubmittedLeadId(data || `ATLA${Date.now().toString(36).toUpperCase()}`);
+    const firstName = fullName.trim().split(/\s+/)[0] || 'there';
+    closeQuickEnquiry();
+    showSlashPopup(
+      `Hey ${firstName}, I got your request. I will arrange a specialist from our team to connect with you shortly.`
+    );
   };
-
-  const refCode = submittedLeadId ? String(submittedLeadId).slice(0, 8).toUpperCase() : '';
 
   return (
     <div
@@ -180,39 +183,7 @@ export default function QuickEnquiryModal() {
         </div>
 
         <div className="qe-body">
-          {submittedLeadId ? (
-            <div className="qe-success">
-              <div className="qe-check">
-                <Icon name="check" color="#fff" wrap={false} />
-              </div>
-              <h3>We&apos;ll reply within one business day</h3>
-              <p>
-                Your enquiry has been saved. Reference number:{' '}
-                <strong className="qe-ref">{refCode}</strong>
-              </p>
-              <div className="qe-success-acts">
-                <a
-                  className="btn btn-primary"
-                  href={SITE_CONFIG.instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span style={{ display: 'inline-flex', width: '18px', height: '18px', flexShrink: 0 }}>
-                    <Icon name="instagram" color="currentColor" wrap={false} />
-                  </span>
-                  DM us on Instagram ({SITE_CONFIG.instagramHandle}) →
-                </a>
-                <Link
-                  className="btn btn-neu"
-                  to={`/get-started?ref=${encodeURIComponent(submittedLeadId)}`}
-                  onClick={closeQuickEnquiry}
-                >
-                  Complete your business profile (2 min)
-                </Link>
-              </div>
-            </div>
-          ) : (
-            <>
+          <>
               {(quickEnquiry.cocktailItems?.length > 0 ||
                 quickEnquiry.packageName ||
                 quickEnquiry.askQuestion ||
@@ -320,11 +291,14 @@ export default function QuickEnquiryModal() {
                   </div>
 
                   <div className={`field ${fieldErrors.email ? 'is-error' : ''}`}>
-                    <label htmlFor="qe-email">Email</label>
+                    <label htmlFor="qe-email">
+                      Email <span className="req" aria-hidden="true">*</span>
+                    </label>
                     <input
                       id="qe-email"
                       type="email"
                       className="input"
+                      required
                       value={email}
                       onChange={(e) => {
                         const val = e.target.value;
@@ -466,7 +440,6 @@ export default function QuickEnquiryModal() {
                 </p>
               </form>
             </>
-          )}
         </div>
       </div>
     </div>

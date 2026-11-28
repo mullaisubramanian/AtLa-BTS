@@ -1,0 +1,71 @@
+.career-form {
+  padding: 28px;
+  border-radius: 26px;
+  display: grid;
+  gap: 18px;
+  position: relative;
+}
+
+.career-form.is-compact {
+  padding: 26px;
+}
+
+.cf-hp {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.cf-full {
+  grid-column: 1 / -1;
+}
+
+.cf-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cf-char-count {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.cf-consent {
+  margin-top: 2px;
+}
+
+.cf-error {
+  padding: 11px 14px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #991b1b;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.cf-submit {
+  justify-content: center;
+  min-height: 46px;
+}
+
+@media (max-width: 720px) {
+  .cf-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .career-form {
+    padding: 20px;
+  }
+}
+

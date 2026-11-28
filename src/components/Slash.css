@@ -1,0 +1,33 @@
+.slash-bot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.slash-bot svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.slash-bot.is-animated {
+  animation: slashFloat 3.6s ease-in-out infinite;
+}
+
+@keyframes slashFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slash-bot.is-animated {
+    animation: none;
+  }
+}
+

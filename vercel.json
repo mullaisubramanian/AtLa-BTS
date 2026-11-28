@@ -7,6 +7,7 @@
     { "source": "/academy", "destination": "/academy/index.html" },
     { "source": "/contact", "destination": "/contact/index.html" },
     { "source": "/get-started", "destination": "/get-started/index.html" },
+    { "source": "/careers", "destination": "/careers/index.html" },
     { "source": "/privacy", "destination": "/privacy/index.html" },
     { "source": "/terms", "destination": "/terms/index.html" },
     { "source": "/admin", "destination": "/admin.html" },

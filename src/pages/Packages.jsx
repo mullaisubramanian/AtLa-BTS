@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { SITE_CONFIG } from '../config/site';
 import { useCatalogue } from '../context/CatalogueContext';
+import { useModals } from '../context/ModalContext';
 import { track } from '../lib/api';
 import Seo from '../components/Seo';
 import Eyebrow from '../components/Eyebrow';
@@ -10,6 +10,7 @@ import './Packages.css';
 
 export default function Packages() {
   const { packages } = useCatalogue();
+  const { openQuickEnquiry } = useModals();
   const [flippedMap, setFlippedMap] = useState({});
 
   const toggleFlip = (pkg) => {
@@ -120,21 +121,23 @@ export default function Packages() {
                           </li>
                         ))}
                       </ul>
-                      <a
+                      <button
+                        type="button"
                         className="btn btn-primary pk-btn"
-                        href={SITE_CONFIG.instagramUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                         onClick={(e) => {
                           e.stopPropagation();
-                          track('negotiate_click', {
+                          openQuickEnquiry({
                             source: 'package_negotiate',
-                            package_id: p.id,
+                            title: "Let's negotiate",
+                            packageId: p.id,
+                            packageName: p.name,
+                            packageColor: p.color,
+                            defaultMessage: `I'd like to negotiate a plan around the ${p.name} package.`,
                           });
                         }}
                       >
                         Let&apos;s negotiate →
-                      </a>
+                      </button>
                     </>
                   }
                 />

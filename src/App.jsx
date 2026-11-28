@@ -8,6 +8,7 @@ import Toast from './components/Layout/Toast';
 import PracticeModal from './components/PracticeModal';
 import AskModal from './components/AskAtla/AskModal';
 import QuickEnquiryModal from './components/QuickEnquiryModal';
+import SlashPopup from './components/SlashPopup';
 import { track } from './lib/api';
 import { initTracking } from './lib/session';
 import Home from './pages/Home';
@@ -18,6 +19,7 @@ import Packages from './pages/Packages';
 import Academy from './pages/Academy';
 import Contact from './pages/Contact';
 import GetStarted from './pages/GetStarted';
+import Careers from './pages/Careers';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import NotFound from './pages/NotFound';
@@ -94,6 +96,7 @@ export default function App() {
           <Route path="/academy" element={<Academy />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/get-started" element={<GetStarted />} />
+          <Route path="/careers" element={<Careers />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="*" element={<NotFound />} />
@@ -104,6 +107,7 @@ export default function App() {
       <PracticeModal />
       <AskModal />
       <QuickEnquiryModal />
+      <SlashPopup />
       <Toast />
     </>
   );

@@ -5,6 +5,7 @@ import { supabase } from '../../lib/supabase';
 import { useModals } from '../../context/ModalContext';
 import Logo from '../../components/Logo';
 import LeadsInbox from './LeadsInbox';
+import ApplicationsInbox from './ApplicationsInbox';
 import LeadDetailDrawer from './LeadDetailDrawer';
 import InsightsView from './InsightsView';
 import CatalogueManager from './CatalogueManager';
@@ -19,19 +20,25 @@ export default function AdminLayout() {
   const [staffProfile, setStaffProfile] = useState(null);
   const [section, setSection] = useState('leads');
   const [leads, setLeads] = useState([]);
+  const [applications, setApplications] = useState([]);
   const [staffList, setStaffList] = useState([]);
   const [selectedLeadId, setSelectedLeadId] = useState(null);
 
   const loadInbox = useCallback(async () => {
     if (!supabase) return;
-    const [leadsRes, staffRes] = await Promise.all([
+    const [leadsRes, appsRes, staffRes] = await Promise.all([
       supabase
         .from('v_lead_inbox')
+        .select('*')
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('job_applications')
         .select('*')
         .order('created_at', { ascending: false }),
       supabase.from('staff_profiles').select('*').order('full_name'),
     ]);
     if (leadsRes.data) setLeads(leadsRes.data);
+    if (appsRes.data) setApplications(appsRes.data);
     if (staffRes.data) setStaffList(staffRes.data);
   }, []);
 
@@ -112,6 +119,7 @@ export default function AdminLayout() {
   }
 
   const newCount = leads.filter((l) => l.status === 'new').length;
+  const newAppsCount = applications.filter((a) => a.status === 'new').length;
   const isAdmin = staffProfile?.role === 'admin';
 
   return (
@@ -142,6 +150,15 @@ export default function AdminLayout() {
         >
           <span>Leads inbox</span>
           {newCount > 0 && <span className="adm-badge">{newCount}</span>}
+        </button>
+
+        <button
+          type="button"
+          className={`adm-nav-btn ${section === 'applications' ? 'on' : ''}`}
+          onClick={() => setSection('applications')}
+        >
+          <span>Applications</span>
+          {newAppsCount > 0 && <span className="adm-badge">{newAppsCount}</span>}
         </button>
 
         <button
@@ -190,6 +207,7 @@ export default function AdminLayout() {
         <div className="adm-topbar glass">
           <h1>
             {section === 'leads' && 'Leads Inbox'}
+            {section === 'applications' && 'Applications'}
             {section === 'insights' && 'Growth Insights'}
             {section === 'catalogue' && 'Catalogue Manager'}
             {section === 'staff' && 'Staff Access'}
@@ -210,6 +228,10 @@ export default function AdminLayout() {
             staffList={staffList}
             onSelectLead={(id) => setSelectedLeadId(id)}
           />
+        )}
+
+        {section === 'applications' && (
+          <ApplicationsInbox applications={applications} onUpdated={loadInbox} />
         )}
 
         {section === 'insights' && <InsightsView leads={leads} />}

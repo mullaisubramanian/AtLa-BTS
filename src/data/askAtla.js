@@ -161,10 +161,10 @@ export const PAGES = {
   negotiate: {
     key: 'negotiate',
     title: "Let's negotiate",
-    icon: 'instagram',
-    desc: 'DM us on Instagram (@atla_bts)',
+    icon: 'link',
+    desc: 'Discuss custom pricing',
     path: '/contact',
-    isInstagram: true,
+    isContact: true,
   },
 };
 

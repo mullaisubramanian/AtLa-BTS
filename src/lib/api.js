@@ -240,6 +240,31 @@ export async function submitLead(payload) {
   }
 }
 
+export async function submitJobApplication(payload = {}) {
+  if (!supabase) {
+    return { data: null, error: new Error('Supabase not configured') };
+  }
+  const sanitized = {
+    full_name: cleanString(payload.full_name || ''),
+    email: cleanString(payload.email || '').toLowerCase(),
+    phone: cleanString(payload.phone || '') || null,
+    role: cleanString(payload.role || ''),
+    portfolio_url: cleanString(payload.portfolio_url || '') || null,
+    note: cleanString(payload.note || '') || null,
+    consent: Boolean(payload.consent),
+  };
+
+  try {
+    const { data, error } = await supabase.rpc('submit_job_application', { p: sanitized });
+    if (!error) {
+      track('job_application_submitted', { role: sanitized.role });
+    }
+    return { data, error };
+  } catch (err) {
+    return { data: null, error: err };
+  }
+}
+
 export async function logAsk({
   conversationId = null,
   page,
